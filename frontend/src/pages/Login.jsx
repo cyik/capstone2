@@ -15,7 +15,7 @@ function Login() {
   const handleLogin = () => {
     if (username === "therapist") {
       setError("");
-      navigate("/therapist");
+      navigate("/therapist-home");
     } else if (username === "patient") {
       setError("");
       navigate("/patient-home");
