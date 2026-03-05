@@ -1,15 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
-import TherapistPage from "./pages/TherapistPage";
-import PatientPage from "./pages/PatientPage";
+import EmotionDetectionPage from "./pages/EmotionDetectionPage";
+import TherapistHomePage from "./pages/TherapistHomePage";
+import PatientHomePage from "./pages/PatientHomePage";
+
+//These handles the URLs and where they lead to
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Login />} />
-      <Route path="/therapist" element={<TherapistPage />} />
-      <Route path="/patient" element={<PatientPage />} />
-    </Routes>
+    <Route path="/login" element={<Login />} />
+    <Route path="/therapist-home" element={<TherapistHomePage />} />
+    <Route path="/therapist" element={<EmotionDetectionPage />} />
+    <Route path="/patient-home" element={<PatientHomePage />} />
+</Routes>
   );
 }
 

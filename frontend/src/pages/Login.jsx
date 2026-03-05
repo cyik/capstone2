@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/eztherapy.png";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
+import GuardianCalendarScreen from "./PatientHomePage";
+
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -16,7 +18,7 @@ function Login() {
       navigate("/therapist");
     } else if (username === "patient") {
       setError("");
-      navigate("/patient");
+      navigate("/patient-home");
     } else {
       setError("Wrong username or password");
     }

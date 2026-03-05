@@ -1,2 +1,6 @@
 @import "tailwindcss";
 
+@theme {                /* don't change this line even though it's giving error */
+  --color-primary: #137fec;
+}
+
