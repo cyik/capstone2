@@ -62,7 +62,21 @@ const INITIAL_APPOINTMENTS = [
     status: 'confirmed',
     type: 'video',
     videoLink: 'https://meet.google.com/noah-session'
+  },
+  {
+    id: '4',
+    patientId: 'p3',
+    patientName: 'Emma Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 1).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/noah-session'
   }
+  
 ];
 
 const MOCK_PATIENTS = [

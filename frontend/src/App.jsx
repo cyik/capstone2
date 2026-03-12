@@ -3,6 +3,8 @@ import Login from "./pages/Login";
 import EmotionDetectionPage from "./pages/EmotionDetectionPage";
 import TherapistHomePage from "./pages/TherapistHomePage";
 import PatientHomePage from "./pages/PatientHomePage";
+import DailyReportForm from "./pages/DailyReportForm";
+import RegisterPage from "./pages/Register"
 
 //These handles the URLs and where they lead to
 
@@ -16,6 +18,10 @@ function App() {
     <Route path="/therapist-home" element={<TherapistHomePage />} />
     <Route path="/therapist" element={<EmotionDetectionPage />} />
     <Route path="/patient-home" element={<PatientHomePage />} />
+    <Route path="/dailyreportform" element={<DailyReportForm />} />
+    <Route path="/register" element={<RegisterPage />} />
+    
+    
 </Routes>
   );
 }
