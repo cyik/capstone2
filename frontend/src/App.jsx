@@ -5,6 +5,7 @@ import TherapistHomePage from "./pages/TherapistHomePage";
 import PatientHomePage from "./pages/PatientHomePage";
 import DailyReportForm from "./pages/DailyReportForm";
 import RegisterPage from "./pages/Register"
+import PatientChatBoard from "./pages/PatientChatBoard";
 
 //These handles the URLs and where they lead to
 
@@ -20,6 +21,7 @@ function App() {
     <Route path="/patient-home" element={<PatientHomePage />} />
     <Route path="/dailyreportform" element={<DailyReportForm />} />
     <Route path="/register" element={<RegisterPage />} />
+    <Route path="/patient-chat" element={<PatientChatBoard />} />
     
     
 </Routes>

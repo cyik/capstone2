@@ -147,8 +147,10 @@ export default function TherapistHomePage() {
           <nav className="space-y-1">
             {[
               { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+              { id: 'AI chatboard', label: 'AI chatboard', icon: MessageSquare, to: '/patient-chat' },
               { id: 'schedule', label: 'Schedule', icon: CalendarIcon, to: '/calendar' },
               { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/messages' },
+              
             ].map((item) => (
               <button
                 key={item.id}

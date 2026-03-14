@@ -1,0 +1,8 @@
+node_modules/
+__pycache__/
+*.db
+.env
+.DS_Store
+dist/
+build/
+backend/sql_app.db
