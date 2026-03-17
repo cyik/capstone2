@@ -25,6 +25,7 @@ import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import eztherapylogo from '../assets/eztherapy transparent.png';
 import AQ10Dashboard from '../components/AQ10Dashboard';
+import Sidebar from "../components/SideNavigationBar";
 
 // Mock Data
 const INITIAL_APPOINTMENTS = [
@@ -335,7 +336,6 @@ export default function PatientHomePage() {
   const [aq10Data, setAq10Data] = useState([]);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [profileAction, setProfileAction] = useState('view'); // 'view' or 'edit'
-  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [userProfile, setUserProfile] = useState({
     name: localStorage.getItem("username") || 'Patient',
@@ -414,53 +414,10 @@ export default function PatientHomePage() {
   return (
     <div className="flex h-screen bg-[#F8FAFC] text-slate-900 font-sans overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
-        <div className="p-6">
-          <div className="flex items-center gap-3 mb-8">
-        
-              <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
-  
-            <h1 className="text-xl font-bold tracking-tight ml-5">EZTherapy</h1>
-          </div>
-
-          <nav className="space-y-1">
-            {[
-              { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-              { id: 'AI chatboard', label: 'AI chatboard', icon: MessageSquare, to: '/patient-chat' },
-              { id: 'schedule', label: 'Schedule', icon: CalendarIcon, to: '/calendar' },
-              { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/messages' },
-              
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => {
-                  setActiveTab(item.id);
-                  if (item.to) navigate(item.to);
-                }}
-                className={cn(
-                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                  activeTab === item.id 
-                    ? "bg-primary text-white shadow-md shadow-primary/10" 
-                    : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-                )}
-              >
-                <item.icon size={20} />
-                {item.label}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        <div className="mt-auto p-6 border-t border-slate-100">
-          <button 
-            onClick={() => setIsLogoutModalOpen(true)}
-            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
-          >
-            <LogOut size={20} />
-            Logout
-          </button>
-        </div>
-      </aside>
+      <Sidebar
+       activeTab={activeTab}
+       setActiveTab={setActiveTab}
+      />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col overflow-hidden">
@@ -987,49 +944,7 @@ export default function PatientHomePage() {
               </div>
             )}
 
-            {isLogoutModalOpen && (
-              <div className="fixed inset-0 z-[140] flex items-center justify-center p-4">
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setIsLogoutModalOpen(false)}
-                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
-                />
-                <motion.div 
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8 text-center"
-                >
-                  <div className="size-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-rose-500">
-                    <LogOut size={40} />
-                  </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
-                  <p className="text-slate-500 font-medium mb-8">Are you sure you want to <span className="text-rose-600 font-black">Logout</span>?</p>
-                  
-                  <div className="flex gap-4">
-                    <button 
-                      onClick={() => setIsLogoutModalOpen(false)}
-                      className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
-                    >
-                      Cancel
-                    </button>
-                    <button 
-                      onClick={() => {
-                        localStorage.removeItem("username");
-                        localStorage.removeItem("role");
-                        navigate("/login");
-                      }}
-                      className="flex-1 py-4 bg-rose-600 text-white rounded-2xl font-bold shadow-lg shadow-rose-100 hover:bg-rose-700 transition-all flex items-center justify-center gap-2"
-                    >
-                      <LogOut size={18} />
-                      Logout
-                    </button>
-                  </div>
-                </motion.div>
-              </div>
-            )}
+            
           </AnimatePresence>
 
           {/* Stats Grid */}

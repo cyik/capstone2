@@ -12,36 +12,41 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    setError("");
-    if (!username || !password) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("username", data.username);
-        localStorage.setItem("role", data.role);
-        if (data.role === "therapist") {
-          navigate("/therapist-home");
-        } else {
-          navigate("/patient-home");
+    const handleLogin = async () => {
+        if (!username || !password) {
+            setError("Please fill in all fields.");
+            return;
         }
-      } else {
-        const errorData = await response.json();
-        setError(errorData.detail || "Invalid username or password");
-      }
-    } catch (err) {
-      setError("Could not connect to the server.");
-    }
-  };
+        try {
+            const response = await fetch("http://localhost:8000/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setError("");
+
+                // Store JWT token
+                localStorage.setItem("token", data.access_token);
+                // Store username and role if needed
+                localStorage.setItem("username", data.username);
+                localStorage.setItem("role", data.role);
+
+                if (data.role === "therapist") {
+                    navigate("/therapist-home");
+                } else {
+                    navigate("/patient-home");
+                }
+            } else {
+                const errorData = await response.json();
+                setError(errorData.detail || "Wrong username or password");
+            }
+        } catch (err) {
+            setError("Could not connect to the server.");
+        }
+    };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-green-400 to-purple-600">

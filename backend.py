@@ -6,6 +6,7 @@
 #Username: patient      Password: root       Role: Patient
 #Username: testing      Password: testing123       Role: Patient
 
+from ast import List
 import crud, models, schemas
 from database import SessionLocal, engine
 from sqlalchemy.orm import Session
@@ -16,8 +17,8 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
-from typing import Optional
-from datetime import timedelta
+from typing import Optional, List
+from datetime import datetime, timedelta
 
 from hash import verify_password
 from auth_token import create_access_token
@@ -75,12 +76,22 @@ def login(req: schemas.UserLogin, db: Session = Depends(get_db)):
         "role": db_user.role
     }
 
-@app.get("/api/appointments/{username}")
-def read_appointments(username: str, role: str, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_username(db, username=username)
+@app.get("/api/appointments/user/{username}", response_model=List[schemas.Appointment])
+def get_appointments_by_username(username: str, db: Session = Depends(get_db)):
+    """
+    Get all appointments related to a user by username (as initiator or target)
+    """
+    user_appointments = crud.get_appointments_by_username(db, username)
+    if not user_appointments:
+        raise HTTPException(status_code=404, detail="No appointments found for this username")
+    return user_appointments
+
+@app.get("/api/users/{user_id}", response_model=schemas.User)
+def read_user(user_id: int, db: Session = Depends(get_db)):
+    db_user = crud.get_user(db, user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
-    return crud.get_appointments_by_username(db, username=username, role=role)
+    return db_user
 
 import datetime
 

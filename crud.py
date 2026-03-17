@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 import models, schemas
 from hash import hash_password
+from models import Appointment, User
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -23,6 +24,47 @@ def create_user(db: Session, user: schemas.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+# Create appointment
+def create_appointment(
+    db: Session,
+    initiator_id: int,
+    target_id: int,
+    initiator_role: str,
+    target_role: str,
+    date,
+    start_time,
+    end_time,
+    status: str
+):
+    """
+    Create an appointment where initiator and target roles are dynamic.
+    """
+    db_appointment = Appointment(
+        initiator_id=initiator_id,
+        target_id=target_id,
+        initiator_role=initiator_role,
+        target_role=target_role,
+        date=date,
+        start_time=start_time,
+        end_time=end_time,
+        status=status
+    )
+    db.add(db_appointment)
+    db.commit()
+    db.refresh(db_appointment)
+    return db_appointment
+
+def get_appointments_by_username(db: Session, username: str):
+    user = db.query(User).filter(User.username == username).first()
+    if not user:
+        return []
+    
+    return db.query(Appointment).filter(
+        (Appointment.initiator_id == user.id)
+    ).all()
+
 
 def get_therapists(db: Session):
     return db.query(models.User).filter(models.User.role == "therapist").all()
