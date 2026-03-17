@@ -15,13 +15,16 @@ import {
   MapPin,
   CheckCircle2,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  BrainCircuit,
+  Download
 } from 'lucide-react';
 import { format, addDays, startOfWeek, eachDayOfInterval, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import eztherapylogo from '../assets/eztherapy transparent.png';
+import AQ10Dashboard from '../components/AQ10Dashboard';
 
 // Mock Data
 const INITIAL_APPOINTMENTS = [
@@ -75,8 +78,197 @@ const INITIAL_APPOINTMENTS = [
     status: 'confirmed',
     type: 'video',
     videoLink: 'https://meet.google.com/noah-session'
+  },
+  {
+    id: '5',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 2).toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '11:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-5'
+  },
+  {
+    id: '6',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 2).toISOString().split('T')[0],
+    startTime: '14:00',
+    endTime: '15:00',
+    status: 'pending',
+    type: 'in-person'
+  },
+  {
+    id: '7',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 3).toISOString().split('T')[0],
+    startTime: '11:30',
+    endTime: '12:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-7'
+  },
+  {
+    id: '8',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't3',
+    therapistName: 'Dr. Emily Watson',
+    date: addDays(new Date(), 3).toISOString().split('T')[0],
+    startTime: '15:00',
+    endTime: '16:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-8'
+  },
+  {
+    id: '9',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 4).toISOString().split('T')[0],
+    startTime: '09:00',
+    endTime: '10:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '10',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 4).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-10'
+  },
+  {
+    id: '11',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't4',
+    therapistName: 'Dr. Robert Davis',
+    date: addDays(new Date(), 5).toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '11:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-11'
+  },
+  {
+    id: '12',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 5).toISOString().split('T')[0],
+    startTime: '16:00',
+    endTime: '17:00',
+    status: 'pending',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-12'
+  },
+  {
+    id: '13',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't5',
+    therapistName: 'Dr. Lisa Patel',
+    date: addDays(new Date(), 6).toISOString().split('T')[0],
+    startTime: '11:00',
+    endTime: '12:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '14',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 6).toISOString().split('T')[0],
+    startTime: '14:30',
+    endTime: '15:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-14'
+  },
+  {
+    id: '15',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 7).toISOString().split('T')[0],
+    startTime: '09:30',
+    endTime: '10:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-15'
+  },
+  {
+    id: '16',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't3',
+    therapistName: 'Dr. Emily Watson',
+    date: addDays(new Date(), 7).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '17',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't4',
+    therapistName: 'Dr. Robert Davis',
+    date: addDays(new Date(), 8).toISOString().split('T')[0],
+    startTime: '10:30',
+    endTime: '11:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-17'
+  },
+  {
+    id: '18',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 8).toISOString().split('T')[0],
+    startTime: '15:00',
+    endTime: '16:00',
+    status: 'pending',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-18'
+  },
+  {
+    id: '19',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't5',
+    therapistName: 'Dr. Lisa Patel',
+    date: addDays(new Date(), 9).toISOString().split('T')[0],
+    startTime: '12:00',
+    endTime: '13:00',
+    status: 'confirmed',
+    type: 'in-person'
   }
-  
 ];
 
 const MOCK_PATIENTS = [
@@ -86,15 +278,74 @@ const MOCK_PATIENTS = [
   { id: 'p4', name: 'Emma Davis', age: 7, status: 'Warning: Declining Trend', lastActive: '1h ago', avatar: 'https://picsum.photos/seed/p4/200' },
 ];
 
-export default function TherapistHomePage() {
+const RECENT_APPOINTMENTS = [
+  { id: 'a1', therapistName: 'Dr. Sarah Chen', avatar: 'https://picsum.photos/seed/sarah/200', timeAgo: '2 days ago', level: 'Senior Therapist', age: 42, education: 'Ph.D. in Clinical Psychology', department: 'Pediatric Psychology', experience: '15 Years' },
+  { id: 'a2', therapistName: 'Dr. Michael Chang', avatar: 'https://picsum.photos/seed/michael/200', timeAgo: '1 week ago', level: 'Therapist', age: 35, education: 'M.S. in Counseling', department: 'Behavioral Health', experience: '8 Years' },
+  { id: 'a3', therapistName: 'Dr. Emily Watson', avatar: 'https://picsum.photos/seed/emily/200', timeAgo: '2 weeks ago', level: 'Junior Therapist', age: 29, education: 'M.A. in Psychology', department: 'Developmental Therapy', experience: '3 Years' },
+  { id: 'a4', therapistName: 'Dr. Robert Davis', avatar: 'https://picsum.photos/seed/robert/200', timeAgo: '1 month ago', level: 'Senior Therapist', age: 50, education: 'Psy.D.', department: 'Clinical Therapy', experience: '22 Years' },
+  { id: 'a5', therapistName: 'Dr. Lisa Patel', avatar: 'https://picsum.photos/seed/lisa/200', timeAgo: '1.5 months ago', level: 'Therapist', age: 38, education: 'Ph.D. in Child Psychology', department: 'Pediatric Psychology', experience: '10 Years' }
+];
+
+const MOCK_NOTIFICATIONS = [
+  {
+    id: 1,
+    title: 'New Message',
+    description: 'You have 1 new message from Dr. Sarah Chen',
+    time: '5m ago',
+    unread: true,
+    type: 'message'
+  },
+  {
+    id: 2,
+    title: 'Upcoming Session',
+    description: 'Your session with Dr. Michael Chang starts in 30 minutes',
+    time: '25m ago',
+    unread: true,
+    type: 'appointment'
+  },
+  {
+    id: 3,
+    title: 'Report Published',
+    description: 'Your weekly progress report is now available',
+    time: '2h ago',
+    unread: false,
+    type: 'report'
+  }
+];
+
+export default function PatientHomePage() {
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  React.useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (!role || role !== "patient") {
+      navigate("/login");
+    }
+  }, [navigate]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [bookingTime, setBookingTime] = useState('10:00');
   const [selectedPatient, setSelectedPatient] = useState(MOCK_PATIENTS[0]);
+  const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
+  const [selectedTherapistProfile, setSelectedTherapistProfile] = useState(null);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [aq10Data, setAq10Data] = useState([]);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileAction, setProfileAction] = useState('view'); // 'view' or 'edit'
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState({
+    name: localStorage.getItem("username") || 'Patient',
+    role: 'Therapy Patient',
+    email: `${localStorage.getItem("username") || 'patient'}@example.com`,
+    phone: '+1 234 567 890',
+    address: '123 Therapy Lane, Wellness City',
+    bio: 'Looking for progressive growth and emotional stability.',
+    avatar: 'https://picsum.photos/seed/patient/200'
+  });
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
@@ -126,10 +377,38 @@ export default function TherapistHomePage() {
     setIsBookingModalOpen(false);
   };
 
+  const handleOpenExportModal = async () => {
+    setIsExportModalOpen(true);
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/aq10/john_pork');
+      if (response.ok) {
+        const data = await response.json();
+        setAq10Data(data.history || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch AQ10 data for export', error);
+    }
+  };
+
+  const downloadExcel = () => {
+    if (!aq10Data.length) return;
+    const headers = ['Date', 'AQ10 Score'];
+    const rows = aq10Data.map(d => [d.date, d.score]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'AQ10_Score_Report.csv');
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
+
   const stats = [
-    { label: 'Sessions Today', value: '8', icon: CalendarIcon, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Pending Reports', value: '3', icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Avg. Progress', value: '+12%', icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Sessions Done', value: '5', icon: CalendarIcon, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'AQ-10 Quizzes Completed', value: '3', icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-50' },
+    { label: 'Behavior Progress', value: '+12%', icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
   ];
 
   return (
@@ -173,7 +452,10 @@ export default function TherapistHomePage() {
         </div>
 
         <div className="mt-auto p-6 border-t border-slate-100">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all">
+          <button 
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
+          >
             <LogOut size={20} />
             Logout
           </button>
@@ -194,20 +476,91 @@ export default function TherapistHomePage() {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="relative p-2 text-slate-400 hover:text-slate-900 transition-colors">
-              <Bell size={22} />
-              <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-white" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className={cn(
+                  "relative p-2 rounded-xl transition-all duration-300",
+                  isNotificationsOpen ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
+                )}
+              >
+                <Bell size={22} />
+                <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-indigo-600" />
+              </button>
+
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setIsNotificationsOpen(false)}
+                      className="fixed inset-0 z-40"
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      className="absolute right-0 mt-3 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50 origin-top-right"
+                    >
+                      <div className="p-5 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                        <h3 className="font-bold text-slate-900">Notifications</h3>
+                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-full tracking-wider">
+                          {MOCK_NOTIFICATIONS.filter(n => n.unread).length} New
+                        </span>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {MOCK_NOTIFICATIONS.map((notif) => (
+                          <div 
+                            key={notif.id}
+                            className={cn(
+                              "p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0",
+                              notif.unread && "bg-indigo-50/20"
+                            )}
+                          >
+                            <div className="flex gap-3">
+                              <div className={cn(
+                                "size-10 rounded-xl flex items-center justify-center shrink-0",
+                                notif.type === 'message' ? "bg-emerald-50 text-emerald-600" :
+                                notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
+                              )}>
+                                {notif.type === 'message' ? <MessageSquare size={18} /> :
+                                 notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-slate-900 truncate">{notif.title}</p>
+                                <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{notif.description}</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase mt-2 tracking-wider">{notif.time}</p>
+                              </div>
+                              {notif.unread && (
+                                <div className="mt-1 size-1.5 bg-indigo-500 rounded-full shrink-0" />
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <button 
+                        className="w-full p-4 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors border-t border-slate-50"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
+                        Check all notifications
+                      </button>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="h-8 w-px bg-slate-200" />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setProfileAction('view'); setIsProfileModalOpen(true); }}>
               <div className="text-right">
-                <p className="text-sm font-bold text-white">John Pork</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Therapy Patient</p>
+                <p className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors uppercase">{userProfile.name}</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover:text-slate-300 transition-colors">{userProfile.role}</p>
               </div>
               <img 
-                src="https://picsum.photos/seed/sarah/200" 
+                src={userProfile.avatar} 
                 alt="Profile" 
-                className="size-10 rounded-xl object-cover border-2 border-white shadow-sm"
+                className="size-10 rounded-xl object-cover border-2 border-white shadow-sm ring-0 group-hover:ring-2 group-hover:ring-white transition-all"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -219,11 +572,21 @@ export default function TherapistHomePage() {
           {/* Welcome Section */}
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, John</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, {localStorage.getItem("username") || "Guest"}</h2>
               <p className="text-slate-500 mt-1">You have 8 appointments scheduled for today.</p>
             </div>
             <div className="flex gap-3">
-              <button className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+              <button 
+                onClick={() => navigate('/aq10-form')}
+                className="px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-xl text-sm font-bold text-indigo-600 hover:bg-indigo-100 transition-all flex items-center gap-2"
+              >
+                <BrainCircuit size={18} />
+                Daily AQ-10 Quiz
+              </button>
+              <button 
+                onClick={handleOpenExportModal}
+                className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2">
+                <Download size={18} />
                 Export Report
               </button>
               <button 
@@ -322,6 +685,351 @@ export default function TherapistHomePage() {
                 </motion.div>
               </div>
             )}
+            
+            {isViewAllModalOpen && (
+              <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsViewAllModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-lg bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
+                >
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-2xl font-bold text-slate-900">All Recent Appointments</h3>
+                    <button onClick={() => setIsViewAllModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                      <LayoutDashboard size={20} className="text-slate-400" />
+                    </button>
+                  </div>
+                  <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+                    {RECENT_APPOINTMENTS.map((apt) => (
+                      <div key={apt.id} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 border border-slate-100 transition-all cursor-pointer">
+                        <img 
+                          src={apt.avatar} 
+                          alt={apt.therapistName} 
+                          className="size-12 rounded-xl object-cover border-2 border-slate-100"
+                          referrerPolicy="no-referrer"
+                        />
+                        <div className="flex-1">
+                          <button onClick={() => { setIsViewAllModalOpen(false); setSelectedTherapistProfile(apt); }} className="text-sm font-bold text-slate-900 hover:text-indigo-600 hover:underline text-left">
+                            {apt.therapistName}
+                          </button>
+                          <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{apt.level}</p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-xs font-semibold text-slate-500">{apt.timeAgo}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {selectedTherapistProfile && (
+              <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setSelectedTherapistProfile(null)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
+                >
+                  <div className="flex flex-col items-center text-center">
+                    <img 
+                      src={selectedTherapistProfile.avatar} 
+                      alt={selectedTherapistProfile.therapistName} 
+                      className="size-24 rounded-2xl object-cover border-4 border-slate-100 mb-4 shadow-sm"
+                      referrerPolicy="no-referrer"
+                    />
+                    <h3 className="text-xl font-bold text-slate-900">{selectedTherapistProfile.therapistName}</h3>
+                    <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-1 mb-4">{selectedTherapistProfile.level}</p>
+                    <div className="w-full space-y-3 mt-2 text-left bg-slate-50 p-4 rounded-2xl border border-slate-100">
+                      <div className="grid grid-cols-2 gap-3 mb-2">
+                         <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Age</p>
+                            <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.age}</p>
+                         </div>
+                         <div>
+                            <p className="text-[10px] font-bold text-slate-400 uppercase">Experience</p>
+                            <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.experience}</p>
+                         </div>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Education</p>
+                        <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.education}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Department</p>
+                        <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.department}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Last Session</p>
+                        <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.timeAgo}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase">Contact</p>
+                        <button onClick={() => navigate('/messages')} className="text-sm font-bold text-indigo-600 hover:underline">Send Message</button>
+                      </div>
+                    </div>
+                  </div>
+                  <button onClick={() => setSelectedTherapistProfile(null)} className="mt-6 w-full py-3 bg-indigo-50 text-indigo-700 rounded-xl font-bold hover:bg-indigo-100 transition-colors">
+                    Close Profile
+                  </button>
+                </motion.div>
+              </div>
+            )}
+
+            {isExportModalOpen && (
+              <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsExportModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-2xl bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
+                >
+                  <div className="flex justify-between items-center mb-6">
+                    <div>
+                      <h3 className="text-2xl font-bold text-slate-900">Export AQ-10 Report</h3>
+                      <p className="text-sm text-slate-500 font-medium mt-1">Review your score tracking data before exporting</p>
+                    </div>
+                    <button onClick={() => setIsExportModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                      <LayoutDashboard size={20} className="text-slate-400" />
+                    </button>
+                  </div>
+
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200 p-2 max-h-[50vh] overflow-y-auto mb-6">
+                    <table className="w-full text-left">
+                      <thead className="sticky top-0 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                        <tr>
+                          <th className="p-3">Date</th>
+                          <th className="p-3">AQ-10 Score</th>
+                          <th className="p-3">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-100 bg-white rounded-xl">
+                        {aq10Data.length === 0 ? (
+                          <tr><td colSpan="3" className="p-8 text-center text-sm font-semibold text-slate-400">No data available</td></tr>
+                        ) : (
+                          aq10Data.map((d, i) => (
+                            <tr key={i} className="hover:bg-slate-50 transition-colors">
+                              <td className="p-3 text-sm font-bold text-slate-700">{format(new Date(d.date), 'MMMM d, yyyy')}</td>
+                              <td className="p-3 text-sm font-black text-indigo-600">{d.score} / 10</td>
+                              <td className="p-3">
+                                {d.score > 6 ? (
+                                  <span className="px-2 py-1 bg-rose-50 text-rose-600 text-[10px] font-bold uppercase rounded-md">Elevated</span>
+                                ) : (
+                                  <span className="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase rounded-md">Normal</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-4 border-t border-slate-100 pt-6">
+                    <button onClick={() => setIsExportModalOpen(false)} className="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors">
+                      Cancel
+                    </button>
+                    <button onClick={downloadExcel} className="px-6 py-3 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-colors flex items-center gap-2">
+                      <Download size={18} />
+                      Download Spreadsheet
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {isProfileModalOpen && (
+              <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-md bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
+                >
+                  <div className="flex justify-between items-center mb-8">
+                    <h3 className="text-2xl font-bold text-slate-900">{profileAction === 'view' ? 'Your Profile' : 'Edit Profile'}</h3>
+                    <button onClick={() => setIsProfileModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                      <LayoutDashboard size={20} className="text-slate-400" />
+                    </button>
+                  </div>
+
+                  {profileAction === 'view' ? (
+                    <div className="space-y-6">
+                      <div className="flex flex-col items-center text-center">
+                        <img 
+                          src={userProfile.avatar} 
+                          alt={userProfile.name} 
+                          className="size-24 rounded-3xl object-cover border-4 border-slate-50 shadow-lg mb-4"
+                        />
+                        <h4 className="text-xl font-bold text-slate-900">{userProfile.name}</h4>
+                        <p className="text-sm font-bold text-indigo-600 uppercase tracking-widest">{userProfile.role}</p>
+                      </div>
+
+                      <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 space-y-4">
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Contact Information</p>
+                          <div className="mt-2 space-y-1">
+                            <p className="text-sm font-semibold text-slate-700">{userProfile.email}</p>
+                            <p className="text-sm font-semibold text-slate-700">{userProfile.phone}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Primary Address</p>
+                          <p className="text-sm font-semibold text-slate-700 mt-1">{userProfile.address}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">About Me</p>
+                          <p className="text-sm font-medium text-slate-600 italic mt-1 leading-relaxed">"{userProfile.bio}"</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button 
+                          onClick={() => setProfileAction('edit')}
+                          className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
+                        >
+                          Edit Profile Details
+                        </button>
+                        <button 
+                          onClick={() => setIsProfileModalOpen(false)}
+                          className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                        >
+                          Close View
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <form className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Full Name</label>
+                        <input 
+                          type="text" 
+                          defaultValue={userProfile.name}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Email Address</label>
+                        <input 
+                          type="email" 
+                          defaultValue={userProfile.email}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Phone Number</label>
+                        <input 
+                          type="text" 
+                          defaultValue={userProfile.phone}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Personal Bio</label>
+                        <textarea 
+                          rows="3"
+                          defaultValue={userProfile.bio}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-8">
+                        <button 
+                          type="button"
+                          onClick={() => setProfileAction('view')}
+                          className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                        >
+                          Discard Changes
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            // Update logic would go here
+                            setProfileAction('view');
+                          }}
+                          className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
+                        >
+                          Save Profile
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </motion.div>
+              </div>
+            )}
+
+            {isLogoutModalOpen && (
+              <div className="fixed inset-0 z-[140] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsLogoutModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8 text-center"
+                >
+                  <div className="size-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-rose-500">
+                    <LogOut size={40} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
+                  <p className="text-slate-500 font-medium mb-8">Are you sure you want to <span className="text-rose-600 font-black">Logout</span>?</p>
+                  
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => setIsLogoutModalOpen(false)}
+                      className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={() => {
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("role");
+                        navigate("/login");
+                      }}
+                      className="flex-1 py-4 bg-rose-600 text-white rounded-2xl font-bold shadow-lg shadow-rose-100 hover:bg-rose-700 transition-all flex items-center justify-center gap-2"
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
           </AnimatePresence>
 
           {/* Stats Grid */}
@@ -341,6 +1049,8 @@ export default function TherapistHomePage() {
           <div className="grid grid-cols-12 gap-8">
             {/* Calendar Section */}
             <div className="col-span-8 space-y-6">
+              <AQ10Dashboard username="john_pork" />
+              
               <div className="bg-white rounded-4xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                   <h3 className="text-lg font-bold">Appointment Calendar</h3>
@@ -482,30 +1192,30 @@ export default function TherapistHomePage() {
 
             {/* Patients & Activity Sidebar */}
             <div className="col-span-4 space-y-8">
-              {/* Patient List */}
+              {/* Recent Appointments */}
               <div className="bg-white rounded-4xl border border-slate-200 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-lg font-bold">Recent Patients</h3>
-                  <button onClick={() => navigate('/admin')} className="text-xs font-bold text-primary hover:underline">View All</button>
+                  <h3 className="text-lg font-bold">Recent Appointments</h3>
+                  <button onClick={() => setIsViewAllModalOpen(true)} className="text-xs font-bold text-primary hover:underline">View All</button>
                 </div>
                 <div className="space-y-4">
-                  {MOCK_PATIENTS.map((patient) => (
-                    <div key={patient.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-all cursor-pointer">
+                  {RECENT_APPOINTMENTS.slice(0, 4).map((apt) => (
+                    <div key={apt.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-all cursor-pointer">
                       <img 
-                        src={patient.avatar} 
-                        alt={patient.name} 
-                        className="size-12 rounded-xl object-cover"
+                        src={apt.avatar} 
+                        alt={apt.therapistName} 
+                        className="size-12 rounded-xl object-cover border-2 border-slate-100"
                         referrerPolicy="no-referrer"
                       />
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-slate-900">{patient.name}</p>
-                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{patient.age} years • {patient.lastActive}</p>
+                        <button onClick={() => setSelectedTherapistProfile(apt)} className="text-sm font-bold text-slate-900 hover:text-indigo-600 hover:underline text-left">
+                          {apt.therapistName}
+                        </button>
+                        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{apt.level}</p>
                       </div>
-                      <div className={cn(
-                        "size-2 rounded-full",
-                        patient.status === 'Needs Attention' ? "bg-rose-500" : 
-                        patient.status === 'Warning: Declining Trend' ? "bg-amber-500" : "bg-emerald-500"
-                      )} />
+                      <div className="text-right">
+                        <p className="text-xs font-semibold text-slate-500">{apt.timeAgo}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

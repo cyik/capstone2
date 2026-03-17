@@ -114,7 +114,7 @@ export default function PatientChatBoard() {
             >
               <div 
                 className={cn(
-                  "flex-shrink-0 size-12 rounded-full flex items-center justify-center",
+                  "shrink-0 size-12 rounded-full flex items-center justify-center",
                   message.sender === 'user' ? "bg-indigo-100" : "bg-emerald-200"
                 )}
               >
@@ -218,7 +218,7 @@ export default function PatientChatBoard() {
 
           {isTyping && (
              <div className="flex items-end gap-3 flex-row">
-             <div className="flex-shrink-0 size-12 rounded-full flex items-center justify-center bg-emerald-200">
+             <div className="shrink-0 size-12 rounded-full flex items-center justify-center bg-emerald-200">
                <Bot size={24} className="text-emerald-800" />
              </div>
              <div className="px-6 py-4 rounded-3xl bg-white text-slate-800 rounded-bl-none border border-emerald-100 shadow-sm flex items-center gap-2">

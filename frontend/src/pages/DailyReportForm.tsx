@@ -42,7 +42,7 @@ export default function DailyReportForm() {
               <label className="block text-sm font-medium text-slate-500 mb-2 px-1">Eye contact frequency</label>
               <div className="flex h-10 w-full items-center justify-center rounded-lg bg-slate-100 p-1">
                 {['Low', 'Medium', 'High'].map((val) => (
-                  <label key={val} className="flex cursor-pointer h-full grow items-center justify-center rounded-md px-2 has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-slate-500 text-sm font-medium transition-all">
+                  <label key={val} className="flex cursor-pointer h-full grow items-center justify-center rounded-md px-2 has-:checked:bg-white has-:checked:shadow-sm has-:checked:text-primary text-slate-500 text-sm font-medium transition-all">
                     <span className="truncate">{val}</span>
                     <input className="sr-only" name="eye_contact" type="radio" value={val} defaultChecked={val === 'Medium'} />
                   </label>

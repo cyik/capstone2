@@ -12,15 +12,34 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    if (username === "therapist") {
-      setError("");
-      navigate("/therapist-home");
-    } else if (username === "patient") {
-      setError("");
-      navigate("/patient-home");
-    } else {
-      setError("Wrong username or password");
+  const handleLogin = async () => {
+    setError("");
+    if (!username || !password) {
+      setError("Please fill in all fields.");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:8000/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem("username", data.username);
+        localStorage.setItem("role", data.role);
+        if (data.role === "therapist") {
+          navigate("/therapist-home");
+        } else {
+          navigate("/patient-home");
+        }
+      } else {
+        const errorData = await response.json();
+        setError(errorData.detail || "Invalid username or password");
+      }
+    } catch (err) {
+      setError("Could not connect to the server.");
     }
   };
 

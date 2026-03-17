@@ -1,3 +1,11 @@
+#cd backend > uvicorn backend:app --reload --host 127.0.0.1 --port 8000
+#cd frontend > npm instalL > npm run dev
+
+#Preset Accounts: 
+#Username: therapist    Password: root       Role: Therapist
+#Username: patient      Password: root       Role: Patient
+#Username: testing      Password: testing123       Role: Patient
+
 import crud, models, schemas
 from database import SessionLocal, engine
 from sqlalchemy.orm import Session
@@ -8,6 +16,7 @@ import os
 from dotenv import load_dotenv
 from google import genai
 from google.genai import types
+from typing import Optional
 
 load_dotenv()
 
@@ -148,3 +157,74 @@ def chat_endpoint(chat: schemas.ChatMessage, db: Session = Depends(get_db)):
     except Exception as e:
         print(f"Gemini API Error: {e}")
         return schemas.ChatResponse(response="I'm having a little trouble thinking of what to say right now. Let's take a deep breath together.")
+
+@app.get("/api/contacts/{username}")
+def get_contacts(username: str, role: str, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_username(db, username=username)
+    if not db_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    users = crud.get_all_other_users(db, username=username)
+
+    contacts = []
+    for u in users:
+        unread = crud.get_unread_count(db, sender_username=u.username, receiver_username=username)
+        last_msg = crud.get_last_message(db, username, u.username)
+        contacts.append({
+            "username": u.username, 
+            "role": u.role,
+            "unread_count": unread,
+            "last_message": last_msg.content if last_msg else None,
+            "last_timestamp": last_msg.timestamp if last_msg else None
+        })
+        
+    return contacts
+
+@app.post("/api/messages/read")
+def mark_read(req: dict, db: Session = Depends(get_db)):
+    sender = req.get("sender_username")
+    receiver = req.get("receiver_username")
+    if not sender or not receiver:
+        raise HTTPException(status_code=400, detail="Missing usernames")
+    crud.mark_messages_as_read(db, sender, receiver)
+    return {"status": "ok"}
+
+@app.post("/api/messages", response_model=schemas.DirectMessage)
+def send_message(msg: schemas.DirectMessageCreate, db: Session = Depends(get_db)):
+    # Verify both users exist
+    sender = crud.get_user_by_username(db, username=msg.sender_username)
+    receiver = crud.get_user_by_username(db, username=msg.receiver_username)
+    if not sender or not receiver:
+        raise HTTPException(status_code=404, detail="Sender or receiver not found")
+
+    return crud.create_direct_message(db, msg)
+
+@app.get("/api/messages/{user1}/{user2}", response_model=list[schemas.DirectMessage])
+def read_messages(user1: str, user2: str, reader: Optional[str] = None, db: Session = Depends(get_db)):
+    if reader:
+        # Mark messages sent from the other person as read by the reader
+        other_person = user2 if reader == user1 else user1
+        crud.mark_messages_as_read(db, sender_username=other_person, receiver_username=reader)
+    return crud.get_direct_messages(db, user1, user2)
+
+@app.post("/api/aq10", response_model=schemas.AQ10Record)
+def submit_aq10(record: schemas.AQ10RecordCreate, db: Session = Depends(get_db)):
+    return crud.create_aq10_record(db, record)
+
+import ml
+@app.get("/api/aq10/{username}")
+def get_aq10_history(username: str, db: Session = Depends(get_db)):
+    records = crud.get_aq10_records(db, username)
+    
+    history = [{"date": r.date, "score": r.score} for r in records]
+    
+    prediction = None
+    if len(records) >= 30:
+        scores = [r.score for r in records]
+        prediction = ml.train_and_predict(scores)
+        
+    return {
+        "history": history,
+        "prediction": prediction,
+        "needs_attention": prediction is not None and prediction > 6
+    }

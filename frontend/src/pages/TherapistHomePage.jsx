@@ -16,15 +16,45 @@ import {
   CheckCircle2,
   AlertCircle,
   TrendingUp,
-  ScanFace
+  ScanFace,
+  Download
 } from 'lucide-react';
 import { format, addDays, startOfWeek, eachDayOfInterval, isSameDay, startOfMonth, endOfMonth, endOfWeek, isSameMonth, addMonths, subMonths } from 'date-fns';
 import { motion, AnimatePresence } from 'motion/react';
 import { cn } from '../lib/utils';
 import { useNavigate } from 'react-router-dom';
 import eztherapylogo from '../assets/eztherapy transparent.png';
+import { MOCK_PATIENTS } from '../lib/mockData';
 
 // Mock Data
+
+const MOCK_NOTIFICATIONS = [
+  {
+    id: 1,
+    title: 'Patient Message',
+    description: 'John Pork sent a new message regarding today\'s session',
+    time: '2m ago',
+    unread: true,
+    type: 'message'
+  },
+  {
+    id: 2,
+    title: 'New Assessment',
+    description: 'Alex Johnson has completed their weekly assessment',
+    time: '12m ago',
+    unread: true,
+    type: 'report'
+  },
+  {
+    id: 3,
+    title: 'Meeting Alert',
+    description: 'Case review starting in 15 minutes with clinical staff',
+    time: '45m ago',
+    unread: false,
+    type: 'appointment'
+  }
+];
+
 const INITIAL_APPOINTMENTS = [
   {
     id: '1',
@@ -63,25 +93,278 @@ const INITIAL_APPOINTMENTS = [
     status: 'confirmed',
     type: 'video',
     videoLink: 'https://meet.google.com/noah-session'
+  },
+  {
+    id: '4',
+    patientId: 'p3',
+    patientName: 'Emma Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 1).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/noah-session'
+  },
+  {
+    id: '5',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 2).toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '11:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-5'
+  },
+  {
+    id: '6',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 2).toISOString().split('T')[0],
+    startTime: '14:00',
+    endTime: '15:00',
+    status: 'pending',
+    type: 'in-person'
+  },
+  {
+    id: '7',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 3).toISOString().split('T')[0],
+    startTime: '11:30',
+    endTime: '12:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-7'
+  },
+  {
+    id: '8',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't3',
+    therapistName: 'Dr. Emily Watson',
+    date: addDays(new Date(), 3).toISOString().split('T')[0],
+    startTime: '15:00',
+    endTime: '16:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-8'
+  },
+  {
+    id: '9',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 4).toISOString().split('T')[0],
+    startTime: '09:00',
+    endTime: '10:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '10',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 4).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-10'
+  },
+  {
+    id: '11',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't4',
+    therapistName: 'Dr. Robert Davis',
+    date: addDays(new Date(), 5).toISOString().split('T')[0],
+    startTime: '10:00',
+    endTime: '11:00',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-11'
+  },
+  {
+    id: '12',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 5).toISOString().split('T')[0],
+    startTime: '16:00',
+    endTime: '17:00',
+    status: 'pending',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-12'
+  },
+  {
+    id: '13',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't5',
+    therapistName: 'Dr. Lisa Patel',
+    date: addDays(new Date(), 6).toISOString().split('T')[0],
+    startTime: '11:00',
+    endTime: '12:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '14',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 6).toISOString().split('T')[0],
+    startTime: '14:30',
+    endTime: '15:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-14'
+  },
+  {
+    id: '15',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't2',
+    therapistName: 'Dr. Michael Chang',
+    date: addDays(new Date(), 7).toISOString().split('T')[0],
+    startTime: '09:30',
+    endTime: '10:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-15'
+  },
+  {
+    id: '16',
+    patientId: 'p1',
+    patientName: 'Alex Johnson',
+    therapistId: 't3',
+    therapistName: 'Dr. Emily Watson',
+    date: addDays(new Date(), 7).toISOString().split('T')[0],
+    startTime: '13:00',
+    endTime: '14:00',
+    status: 'confirmed',
+    type: 'in-person'
+  },
+  {
+    id: '17',
+    patientId: 'p2',
+    patientName: 'Mia Jones',
+    therapistId: 't4',
+    therapistName: 'Dr. Robert Davis',
+    date: addDays(new Date(), 8).toISOString().split('T')[0],
+    startTime: '10:30',
+    endTime: '11:30',
+    status: 'confirmed',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-17'
+  },
+  {
+    id: '18',
+    patientId: 'p3',
+    patientName: 'Noah Williams',
+    therapistId: 't1',
+    therapistName: 'Dr. Sarah Chen',
+    date: addDays(new Date(), 8).toISOString().split('T')[0],
+    startTime: '15:00',
+    endTime: '16:00',
+    status: 'pending',
+    type: 'video',
+    videoLink: 'https://meet.google.com/session-18'
+  },
+  {
+    id: '19',
+    patientId: 'p4',
+    patientName: 'Emma Davis',
+    therapistId: 't5',
+    therapistName: 'Dr. Lisa Patel',
+    date: addDays(new Date(), 9).toISOString().split('T')[0],
+    startTime: '12:00',
+    endTime: '13:00',
+    status: 'confirmed',
+    type: 'in-person'
   }
 ];
 
-const MOCK_PATIENTS = [
-  { id: 'p1', name: 'Alex Johnson', age: 8, status: 'Stable & Calm', lastActive: '2h ago', avatar: 'https://picsum.photos/seed/p1/200' },
-  { id: 'p2', name: 'Mia Jones', age: 6, status: 'Needs Attention', lastActive: '5m ago', avatar: 'https://picsum.photos/seed/p2/200' },
-  { id: 'p3', name: 'Noah Williams', age: 10, status: 'Stable & Calm', lastActive: '1d ago', avatar: 'https://picsum.photos/seed/p3/200' },
-  { id: 'p4', name: 'Emma Davis', age: 7, status: 'Warning: Declining Trend', lastActive: '1h ago', avatar: 'https://picsum.photos/seed/p4/200' },
-];
+
 
 export default function TherapistHomePage() {
   const navigate = useNavigate();
   const [currentMonth, setCurrentMonth] = useState(new Date());
+
+  React.useEffect(() => {
+    const role = localStorage.getItem("role");
+    if (!role || role !== "therapist") {
+      navigate("/login");
+    }
+  }, [navigate]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [bookingTime, setBookingTime] = useState('10:00');
   const [selectedPatient, setSelectedPatient] = useState(MOCK_PATIENTS[0]);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileAction, setProfileAction] = useState('view'); // 'view' or 'edit'
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [aq10Data, setAq10Data] = useState([]);
+  const [selectedPatientForExport, setSelectedPatientForExport] = useState('john_pork');
+  
+  const [userProfile, setUserProfile] = useState({
+    name: localStorage.getItem("username") || 'Therapist',
+    role: 'Senior Therapist',
+    email: `${localStorage.getItem("username") || 'therapist'}@eztherapy.com`,
+    phone: '+1 987 654 321',
+    address: '456 Wellness Blvd, Health District',
+    bio: 'Dedicated clinical psychologist with 15+ years of experience specializing in pediatric care and autism spectrum support.',
+    avatar: 'https://picsum.photos/seed/therapist/200'
+  });
+
+  const patientReportOptions = [
+    { username: 'john_pork', name: 'John Pork' },
+    { username: 'alex_johnson', name: 'Alex Johnson' },
+    { username: 'mia_jones', name: 'Mia Jones' },
+    { username: 'noah_williams', name: 'Noah Williams' },
+    { username: 'emma_davis', name: 'Emma Davis' },
+  ];
+
+  const MOCK_REPORTS = {
+    'alex_johnson': [
+      { date: '2026-03-10', score: 4 },
+      { date: '2026-03-12', score: 3 },
+      { date: '2026-03-15', score: 5 },
+    ],
+    'mia_jones': [
+      { date: '2026-03-05', score: 7 },
+      { date: '2026-03-10', score: 6 },
+      { date: '2026-03-14', score: 8 },
+    ],
+    'noah_williams': [
+      { date: '2026-03-01', score: 2 },
+      { date: '2026-03-08', score: 1 },
+      { date: '2026-03-16', score: 2 },
+    ],
+    'emma_davis': [
+      { date: '2026-03-02', score: 5 },
+      { date: '2026-03-09', score: 4 },
+      { date: '2026-03-15', score: 6 },
+    ],
+  };
 
   const monthStart = startOfMonth(currentMonth);
   const monthEnd = endOfMonth(monthStart);
@@ -94,6 +377,44 @@ export default function TherapistHomePage() {
   });
 
   const selectedDayAppointments = appointments.filter(app => isSameDay(new Date(app.date), selectedDate));
+
+  const handleOpenExportModal = async (patientUsername = 'john_pork') => {
+    setSelectedPatientForExport(patientUsername);
+    setIsExportModalOpen(true);
+    
+    if (patientUsername === 'john_pork') {
+      try {
+        const response = await fetch(`http://127.0.0.1:8000/api/aq10/john_pork`);
+        if (response.ok) {
+          const data = await response.json();
+          setAq10Data(data.history || []);
+        } else {
+          setAq10Data([]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch AQ10 data for John Pork', error);
+        setAq10Data([]);
+      }
+    } else {
+      setAq10Data(MOCK_REPORTS[patientUsername] || []);
+    }
+  };
+
+  const downloadExcel = () => {
+    if (!aq10Data.length) return;
+    const headers = ['Date', 'AQ10 Score'];
+    const rows = aq10Data.map(entry => [entry.date, entry.score]);
+    const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const patientName = patientReportOptions.find(p => p.username === selectedPatientForExport)?.name || 'Patient';
+    link.setAttribute('download', `${patientName}_AQ10_Report.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const handleBook = () => {
     const newApp = {
@@ -136,7 +457,7 @@ export default function TherapistHomePage() {
             {[
               { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
               { id: 'behaviordetection', label: 'Behavior Detection', icon: ScanFace, to: '/therapist' },
-              { id: 'patients', label: 'Patients', icon: Users, to: '/admin' },
+              { id: 'patients', label: 'Patients', icon: Users, to: '/therapist-patientpages' },
               { id: 'schedule', label: 'Schedule', icon: CalendarIcon, to: '/calendar' },
               { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/messages' },
             ].map((item) => (
@@ -161,7 +482,10 @@ export default function TherapistHomePage() {
         </div>
 
         <div className="mt-auto p-6 border-t border-slate-100">
-          <button className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all">
+          <button 
+            onClick={() => setIsLogoutModalOpen(true)}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
+          >
             <LogOut size={20} />
             Logout
           </button>
@@ -182,20 +506,91 @@ export default function TherapistHomePage() {
           </div>
 
           <div className="flex items-center gap-6">
-            <button className="relative p-2 text-slate-400 hover:text-slate-900 transition-colors">
-              <Bell size={22} />
-              <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-white" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+                className={cn(
+                  "relative p-2 rounded-xl transition-all duration-300",
+                  isNotificationsOpen ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
+                )}
+              >
+                <Bell size={22} />
+                <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-indigo-600" />
+              </button>
+
+              <AnimatePresence>
+                {isNotificationsOpen && (
+                  <>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      onClick={() => setIsNotificationsOpen(false)}
+                      className="fixed inset-0 z-40"
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                      animate={{ opacity: 1, scale: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                      className="absolute right-0 mt-3 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50 origin-top-right"
+                    >
+                      <div className="p-5 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                        <h3 className="font-bold text-slate-900">Notifications</h3>
+                        <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-full tracking-wider">
+                          {MOCK_NOTIFICATIONS.filter(n => n.unread).length} New
+                        </span>
+                      </div>
+                      <div className="max-h-96 overflow-y-auto">
+                        {MOCK_NOTIFICATIONS.map((notif) => (
+                          <div 
+                            key={notif.id}
+                            className={cn(
+                              "p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0",
+                              notif.unread && "bg-indigo-50/20"
+                            )}
+                          >
+                            <div className="flex gap-3">
+                              <div className={cn(
+                                "size-10 rounded-xl flex items-center justify-center shrink-0",
+                                notif.type === 'message' ? "bg-emerald-50 text-emerald-600" :
+                                notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
+                              )}>
+                                {notif.type === 'message' ? <MessageSquare size={18} /> :
+                                 notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-slate-900 truncate">{notif.title}</p>
+                                <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{notif.description}</p>
+                                <p className="text-[10px] text-slate-400 font-bold uppercase mt-2 tracking-wider">{notif.time}</p>
+                              </div>
+                              {notif.unread && (
+                                <div className="mt-1 size-1.5 bg-indigo-500 rounded-full shrink-0" />
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <button 
+                        className="w-full p-4 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors border-t border-slate-50"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
+                        Mark all as read
+                      </button>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
             <div className="h-8 w-px bg-slate-200" />
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setProfileAction('view'); setIsProfileModalOpen(true); }}>
               <div className="text-right">
-                <p className="text-sm font-bold text-white">Dr. Sarah Chen</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Senior Therapist</p>
+                <p className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors uppercase">{userProfile.name}</p>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover:text-slate-300 transition-colors">{userProfile.role}</p>
               </div>
               <img 
-                src="https://picsum.photos/seed/sarah/200" 
+                src={userProfile.avatar} 
                 alt="Profile" 
-                className="size-10 rounded-xl object-cover border-2 border-white shadow-sm"
+                className="size-10 rounded-xl object-cover border-2 border-white shadow-sm ring-0 group-hover:ring-2 group-hover:ring-white transition-all"
                 referrerPolicy="no-referrer"
               />
             </div>
@@ -207,11 +602,15 @@ export default function TherapistHomePage() {
           {/* Welcome Section */}
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, Sarah</h2>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, {localStorage.getItem("username") || "Doctor"}</h2>
               <p className="text-slate-500 mt-1">You have 8 appointments scheduled for today.</p>
             </div>
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+             <div className="flex gap-3">
+              <button 
+                onClick={() => handleOpenExportModal()}
+                className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2"
+              >
+                <Download size={18} />
                 Export Report
               </button>
               <button 
@@ -305,6 +704,269 @@ export default function TherapistHomePage() {
                       className="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
                     >
                       Confirm Booking
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {isProfileModalOpen && (
+              <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsProfileModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-md bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
+                >
+                  <div className="flex justify-between items-center mb-8">
+                    <h3 className="text-2xl font-bold text-slate-900">{profileAction === 'view' ? 'Staff Profile' : 'Edit Staff Details'}</h3>
+                    <button onClick={() => setIsProfileModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                      <LayoutDashboard size={20} className="text-slate-400" />
+                    </button>
+                  </div>
+
+                  {profileAction === 'view' ? (
+                    <div className="space-y-6">
+                      <div className="flex flex-col items-center text-center">
+                        <img 
+                          src={userProfile.avatar} 
+                          alt={userProfile.name} 
+                          className="size-24 rounded-3xl object-cover border-4 border-slate-50 shadow-lg mb-4"
+                        />
+                        <h4 className="text-xl font-bold text-slate-900">{userProfile.name}</h4>
+                        <p className="text-sm font-bold text-indigo-600 uppercase tracking-widest">{userProfile.role}</p>
+                      </div>
+
+                      <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 space-y-4">
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Work Contact</p>
+                          <div className="mt-2 space-y-1">
+                            <p className="text-sm font-semibold text-slate-700">{userProfile.email}</p>
+                            <p className="text-sm font-semibold text-slate-700">{userProfile.phone}</p>
+                          </div>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Office Location</p>
+                          <p className="text-sm font-semibold text-slate-700 mt-1">{userProfile.address}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Professional Bio</p>
+                          <p className="text-sm font-medium text-slate-600 italic mt-1 leading-relaxed">"{userProfile.bio}"</p>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-4">
+                        <button 
+                          onClick={() => setProfileAction('edit')}
+                          className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
+                        >
+                          Update Profile
+                        </button>
+                        <button 
+                          onClick={() => setIsProfileModalOpen(false)}
+                          className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <form className="space-y-4">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Full Name</label>
+                        <input 
+                          type="text" 
+                          defaultValue={userProfile.name}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Email Address</label>
+                        <input 
+                          type="email" 
+                          defaultValue={userProfile.email}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Phone Number</label>
+                        <input 
+                          type="text" 
+                          defaultValue={userProfile.phone}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Work Bio</label>
+                        <textarea 
+                          rows="3"
+                          defaultValue={userProfile.bio}
+                          className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"
+                        />
+                      </div>
+                      <div className="flex gap-4 mt-8">
+                        <button 
+                          type="button"
+                          onClick={() => setProfileAction('view')}
+                          className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            setProfileAction('view');
+                          }}
+                          className="flex-1 py-4 bg-emerald-600 text-white rounded-2xl font-bold shadow-lg shadow-emerald-100 hover:bg-emerald-700 transition-all"
+                        >
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  )}
+                </motion.div>
+              </div>
+            )}
+
+            {isLogoutModalOpen && (
+              <div className="fixed inset-0 z-[140] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsLogoutModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8 text-center"
+                >
+                  <div className="size-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-rose-500">
+                    <LogOut size={40} />
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
+                  <p className="text-slate-500 font-medium mb-8">Are you sure you want to <span className="text-rose-600 font-black">Logout</span>?</p>
+                  
+                  <div className="flex gap-4">
+                    <button 
+                      onClick={() => setIsLogoutModalOpen(false)}
+                      className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={() => {
+                        localStorage.removeItem("username");
+                        localStorage.removeItem("role");
+                        navigate("/login");
+                      }}
+                      className="flex-1 py-4 bg-rose-600 text-white rounded-2xl font-bold shadow-lg shadow-rose-100 hover:bg-rose-700 transition-all flex items-center justify-center gap-2"
+                    >
+                      <LogOut size={18} />
+                      Logout
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+
+            {isExportModalOpen && (
+              <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setIsExportModalOpen(false)}
+                  className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="relative w-full max-w-4xl bg-white rounded-4xl overflow-hidden shadow-2xl p-8 flex flex-col max-h-[90vh]"
+                >
+                  <div className="flex justify-between items-center mb-8">
+                    <div>
+                      <h3 className="text-2xl font-bold text-slate-900">Patient Score Tracking</h3>
+                      <p className="text-sm text-slate-500 mt-1">Select a patient and export their assessment data</p>
+                    </div>
+                    <button onClick={() => setIsExportModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full">
+                      <LayoutDashboard size={20} className="text-slate-400" />
+                    </button>
+                  </div>
+
+                  <div className="flex gap-4 mb-6">
+                    <div className="flex-1">
+                      <label className="text-[10px] font-bold text-slate-400 uppercase ml-1 mb-2 block">Select Patient</label>
+                      <select 
+                        value={selectedPatientForExport}
+                        onChange={(e) => handleOpenExportModal(e.target.value)}
+                        className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none"
+                      >
+                        {patientReportOptions.map(p => (
+                          <option key={p.username} value={p.username}>{p.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="flex-1 overflow-y-auto mb-8 border border-slate-100 rounded-3xl">
+                    <table className="w-full text-left border-collapse">
+                      <thead className="sticky top-0 bg-white border-b border-slate-100">
+                        <tr>
+                          <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Date</th>
+                          <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-center">AQ-10 Score</th>
+                          <th className="p-4 text-[10px] font-bold text-slate-400 uppercase tracking-widest text-right">Severity</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-slate-50">
+                        {aq10Data.length === 0 ? (
+                          <tr>
+                            <td colSpan="3" className="p-12 text-center text-slate-400 font-medium italic">
+                              No assessment records found for this patient.
+                            </td>
+                          </tr>
+                        ) : (
+                          aq10Data.map((record, idx) => (
+                            <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                              <td className="p-4 text-sm font-bold text-slate-700">{record.date}</td>
+                              <td className="p-4 text-sm font-black text-center text-indigo-600">
+                                <span className="px-3 py-1 bg-indigo-50 rounded-lg">{record.score}</span>
+                              </td>
+                              <td className="p-4 text-right">
+                                {record.score >= 6 ? (
+                                  <span className="px-2 py-1 bg-rose-50 text-rose-600 text-[10px] font-bold uppercase rounded-md">Critical</span>
+                                ) : (
+                                  <span className="px-2 py-1 bg-emerald-50 text-emerald-600 text-[10px] font-bold uppercase rounded-md">Normal</span>
+                                )}
+                              </td>
+                            </tr>
+                          ))
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-4 pt-4 border-t border-slate-100">
+                    <button onClick={() => setIsExportModalOpen(false)} className="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors">
+                      Cancel
+                    </button>
+                    <button 
+                      onClick={downloadExcel} 
+                      disabled={aq10Data.length === 0}
+                      className="px-6 py-3 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed"
+                    >
+                      <Download size={18} />
+                      Download CSV Report
                     </button>
                   </div>
                 </motion.div>
@@ -474,7 +1136,7 @@ export default function TherapistHomePage() {
               <div className="bg-white rounded-4xl border border-slate-200 shadow-sm p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-bold">Recent Patients</h3>
-                  <button onClick={() => navigate('/admin')} className="text-xs font-bold text-primary hover:underline">View All</button>
+                  <button onClick={() => navigate('/patients')} className="text-xs font-bold text-primary hover:underline">View All</button>
                 </div>
                 <div className="space-y-4">
                   {MOCK_PATIENTS.map((patient) => (

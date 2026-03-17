@@ -7,6 +7,8 @@ export interface Patient {
   avatar?: string;
   status: 'Stable & Calm' | 'Warning: Declining Trend' | 'Needs Attention';
   lastUpdated: string;
+  severity?: 'Level 1' | 'Level 2' | 'Level 3';
+  upcomingAppointment?: string;
 }
 
 export interface Message {

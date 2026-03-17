@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any
+import datetime
 
 class UserBase(BaseModel):
     username: str
@@ -41,6 +42,36 @@ class AppointmentCreate(AppointmentBase):
 
 class Appointment(AppointmentBase):
     id: str
+
+    class Config:
+        from_attributes = True
+
+class DirectMessageBase(BaseModel):
+    sender_username: str
+    receiver_username: str
+    content: str
+
+class DirectMessageCreate(DirectMessageBase):
+    pass
+
+class DirectMessage(DirectMessageBase):
+    id: int
+    is_read: bool
+    timestamp: str
+
+    class Config:
+        from_attributes = True
+
+class AQ10RecordBase(BaseModel):
+    patient_username: str
+    score: int
+    date: str
+
+class AQ10RecordCreate(AQ10RecordBase):
+    pass
+
+class AQ10Record(AQ10RecordBase):
+    id: int
 
     class Config:
         from_attributes = True

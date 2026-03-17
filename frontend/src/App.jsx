@@ -6,6 +6,8 @@ import PatientHomePage from "./pages/PatientHomePage";
 import DailyReportForm from "./pages/DailyReportForm";
 import RegisterPage from "./pages/Register"
 import PatientChatBoard from "./pages/PatientChatBoard";
+import Messages from "./pages/Messages";
+import AQ10Form from "./pages/AQ10Form";
 
 //These handles the URLs and where they lead to
 
@@ -22,7 +24,8 @@ function App() {
     <Route path="/dailyreportform" element={<DailyReportForm />} />
     <Route path="/register" element={<RegisterPage />} />
     <Route path="/patient-chat" element={<PatientChatBoard />} />
-    
+    <Route path="/messages" element={<Messages />} />
+    <Route path="/aq10-form" element={<AQ10Form />} />
     
 </Routes>
   );
