@@ -17,6 +17,10 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from typing import Optional
+from datetime import timedelta
+
+from hash import verify_password
+from auth_token import create_access_token
 
 load_dotenv()
 
@@ -50,10 +54,26 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 @app.post("/login")
 def login(req: schemas.UserLogin, db: Session = Depends(get_db)):
+    # Get user from database
     db_user = crud.get_user_by_username(db, username=req.username)
-    if not db_user or db_user.password != req.password:
-        raise HTTPException(status_code=401, detail="Invalid username or password")
-    return {"username": db_user.username, "role": db_user.role}
+    if not db_user:
+        raise HTTPException(status_code=401, detail="Invalid username ")
+    
+    # Verify password using hash
+    if not verify_password(req.password, db_user.password):
+        raise HTTPException(status_code=401, detail="Invalid password")
+    
+    # Create JWT token
+    token_data = {"sub": db_user.username, "role": db_user.role, "id": db_user.id}
+    access_token = create_access_token(data=token_data, expires_delta=timedelta(minutes=60))
+    
+    # Return token and user info
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "username": db_user.username,
+        "role": db_user.role
+    }
 
 @app.get("/api/appointments/{username}")
 def read_appointments(username: str, role: str, db: Session = Depends(get_db)):

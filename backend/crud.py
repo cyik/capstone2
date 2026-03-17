@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import or_, and_
 import models, schemas
+from hash import hash_password
 
 def get_user(db: Session, user_id: int):
     return db.query(models.User).filter(models.User.id == user_id).first()
@@ -9,8 +10,15 @@ def get_user_by_username(db: Session, username: str):
     return db.query(models.User).filter(models.User.username == username).first()
 
 def create_user(db: Session, user: schemas.UserCreate):
-    # In a real app, hash the password here before saving
-    db_user = models.User(username=user.username, password=user.password, role=user.role)
+    # Hash the password here before saving
+    hashed_pw = hash_password(user.password)
+    
+    db_user = models.User(
+        username=user.username, 
+        password=hashed_pw, 
+        role=user.role
+    )
+    
     db.add(db_user)
     db.commit()
     db.refresh(db_user)
