@@ -1,3 +1,5 @@
+//This page is NOT used anymore btw //
+
 import React, { useRef, useEffect } from "react";
 import * as faceapi from "face-api.js";
 

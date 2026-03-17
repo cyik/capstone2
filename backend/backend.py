@@ -1,5 +1,6 @@
 #cd backend > uvicorn backend:app --reload --host 127.0.0.1 --port 8000
 #cd frontend > npm instalL > npm run dev
+#cd backend > python view_users.py to see the hashed passwords
 
 #Preset Accounts: 
 #Username: therapist    Password: root       Role: Therapist
@@ -51,7 +52,7 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 @app.post("/login")
 def login(req: schemas.UserLogin, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_username(db, username=req.username)
-    if not db_user or db_user.password != req.password:
+    if not db_user or not crud.verify_password(req.password, db_user.password):
         raise HTTPException(status_code=401, detail="Invalid username or password")
     return {"username": db_user.username, "role": db_user.role}
 
@@ -228,3 +229,48 @@ def get_aq10_history(username: str, db: Session = Depends(get_db)):
         "prediction": prediction,
         "needs_attention": prediction is not None and prediction > 6
     }
+
+@app.post("/api/clinical-records", response_model=schemas.ClinicalRecord)
+def create_clinical_record(record: schemas.ClinicalRecordCreate, db: Session = Depends(get_db)):
+    return crud.create_clinical_record(db, record)
+
+@app.get("/api/clinical-records/{patient_username}", response_model=list[schemas.ClinicalRecord])
+def get_clinical_records(patient_username: str, db: Session = Depends(get_db)):
+    return crud.get_clinical_records_by_patient(db, patient_username)
+
+@app.delete("/api/clinical-records/{record_id}")
+def delete_clinical_record(record_id: int, db: Session = Depends(get_db)):
+    crud.delete_clinical_record(db, record_id)
+    return {"status": "ok"}
+
+@app.get("/api/db-patients", response_model=list[schemas.Patient])
+def fetch_patients(db: Session = Depends(get_db)):
+    patients = crud.get_db_patients(db)
+    if not patients:
+        # Seed logic
+        initial_patients = [
+            {"name": "Alex Johnson", "age": 8, "severity": "Level 2", "status": "Stable & Calm", "lastActive": "2h ago", "avatar": "https://picsum.photos/seed/p1/200"},
+            {"name": "Mia Jones", "age": 6, "severity": "Level 3", "status": "Needs Attention", "lastActive": "5m ago", "avatar": "https://picsum.photos/seed/p2/200"},
+            {"name": "Noah Williams", "age": 10, "severity": "Level 1", "status": "Stable & Calm", "lastActive": "1d ago", "avatar": "https://picsum.photos/seed/p3/200"},
+            {"name": "Emma Davis", "age": 7, "severity": "Level 2", "status": "Warning: Declining Trend", "lastActive": "1h ago", "avatar": "https://picsum.photos/seed/p4/200"},
+        ]
+        for p in initial_patients:
+            crud.create_db_patient(db, schemas.PatientCreate(**p))
+        return crud.get_db_patients(db)
+    return patients
+
+@app.post("/api/db-patients", response_model=schemas.Patient)
+def add_patient(patient: schemas.PatientCreate, db: Session = Depends(get_db)):
+    return crud.create_db_patient(db, patient)
+
+@app.put("/api/db-patients/{patient_id}", response_model=schemas.Patient)
+def update_patient(patient_id: int, patient: schemas.PatientCreate, db: Session = Depends(get_db)):
+    updated_patient = crud.update_db_patient(db, patient_id, patient)
+    if not updated_patient:
+        raise HTTPException(status_code=404, detail="Patient not found")
+    return updated_patient
+
+@app.delete("/api/db-patients/{patient_id}")
+def delete_patient(patient_id: int, db: Session = Depends(get_db)):
+    crud.delete_db_patient(db, patient_id)
+    return {"status": "ok"}

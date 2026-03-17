@@ -136,7 +136,7 @@ export default function DailyReportForm() {
 
         <div className="px-4 pb-8">
           <button 
-            onClick={() => navigate('/')}
+            onClick={() => navigate('/patient-home')}
             className="w-full h-12 bg-primary hover:bg-blue-600 text-white font-bold rounded-xl shadow-lg shadow-blue-500/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2"
           >
             <Save size={20} />

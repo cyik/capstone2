@@ -59,9 +59,8 @@ function Login() {
 
         {/* Error Message with fade animation */}
         <div
-          className={`w-full flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 transition-all duration-300 ease-in-out ${
-            error ? "opacity-100 max-h-20" : "opacity-0 max-h-0 overflow-hidden"
-          }`}
+          className={`w-full flex items-center gap-2 bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4 transition-all duration-300 ease-in-out ${error ? "opacity-100 max-h-20" : "opacity-0 max-h-0 overflow-hidden"
+            }`}
         >
           <span className="text-red-600 text-lg font-bold">✕</span>
           <span className="text-sm">{error}</span>
@@ -103,12 +102,12 @@ function Login() {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
             >
-            {showPassword ? (
-              <EyeSlashIcon className="w-5 h-5" />
-            ) : (
-              <EyeIcon className="w-5 h-5" />
-            )}
-          </button>
+              {showPassword ? (
+                <EyeSlashIcon className="w-5 h-5" />
+              ) : (
+                <EyeIcon className="w-5 h-5" />
+              )}
+            </button>
           </div>
 
           <button

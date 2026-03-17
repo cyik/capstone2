@@ -8,7 +8,7 @@ import { UserRole } from '../types';
 export default function Navigation({ role }: { role: UserRole }) {
   const guardianItems = [
     { to: '/report', icon: ClipboardCheck, label: 'Questionnaire' },
-    { to: '/calendar', icon: Calendar, label: 'Schedule' },
+    { to: '/patient-calendar', icon: Calendar, label: 'Schedule' },
     { to: '/home', icon: Home, label: 'Home' },
     { to: '/messages', icon: MessageSquare, label: 'Messages' },
     { to: '/profile', icon: User, label: 'Profile' },

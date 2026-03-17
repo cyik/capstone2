@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  Calendar as CalendarIcon, 
-  Users, 
-  MessageSquare, 
-  LayoutDashboard, 
-  Settings, 
-  LogOut, 
-  Search, 
-  Bell, 
-  ChevronLeft, 
+import {
+  Calendar as CalendarIcon,
+  Users,
+  MessageSquare,
+  LayoutDashboard,
+  Settings,
+  LogOut,
+  Search,
+  Bell,
+  ChevronLeft,
   ChevronRight,
   Video,
   Clock,
@@ -310,7 +310,25 @@ export default function TherapistHomePage() {
     if (!role || role !== "therapist") {
       navigate("/login");
     }
+    fetchPatientCount();
   }, [navigate]);
+
+  const fetchPatientCount = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/db-patients');
+      if (response.ok) {
+        const data = await response.json();
+        setTotalPatientCount(data.length);
+        // Corrected filter: Mia Jones has 'Needs Attention' in the database
+        const attentionCount = data.filter(p =>
+          p.status && p.status.toLowerCase().includes('needs attention')
+        ).length;
+        setNeedsAttentionCount(attentionCount);
+      }
+    } catch (error) {
+      console.error("Failed to fetch patient data:", error);
+    }
+  };
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [appointments, setAppointments] = useState(INITIAL_APPOINTMENTS);
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -324,7 +342,9 @@ export default function TherapistHomePage() {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [aq10Data, setAq10Data] = useState([]);
   const [selectedPatientForExport, setSelectedPatientForExport] = useState('john_pork');
-  
+  const [totalPatientCount, setTotalPatientCount] = useState(0);
+  const [needsAttentionCount, setNeedsAttentionCount] = useState(0);
+
   const [userProfile, setUserProfile] = useState({
     name: localStorage.getItem("username") || 'Therapist',
     role: 'Senior Therapist',
@@ -381,7 +401,7 @@ export default function TherapistHomePage() {
   const handleOpenExportModal = async (patientUsername = 'john_pork') => {
     setSelectedPatientForExport(patientUsername);
     setIsExportModalOpen(true);
-    
+
     if (patientUsername === 'john_pork') {
       try {
         const response = await fetch(`http://127.0.0.1:8000/api/aq10/john_pork`);
@@ -434,11 +454,12 @@ export default function TherapistHomePage() {
     setIsBookingModalOpen(false);
   };
 
+  const appointmentsTodayCount = appointments.filter(app => isSameDay(new Date(app.date), new Date())).length;
+
   const stats = [
-    { label: 'Total Patients', value: '25', icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
-    { label: 'Sessions Today', value: '8', icon: CalendarIcon, color: 'text-emerald-600', bg: 'bg-emerald-50' },
-    { label: 'Pending Reports', value: '3', icon: AlertCircle, color: 'text-amber-600', bg: 'bg-amber-50' },
-    { label: 'Avg. Progress', value: '+12%', icon: TrendingUp, color: 'text-indigo-600', bg: 'bg-indigo-50' },
+    { label: 'Total Patients', value: totalPatientCount.toString(), icon: Users, color: 'text-blue-600', bg: 'bg-blue-50' },
+    { label: 'Appointments Today', value: appointmentsTodayCount.toString(), icon: CalendarIcon, color: 'text-emerald-600', bg: 'bg-emerald-50' },
+    { label: 'Patients that require attention', value: needsAttentionCount.toString(), icon: AlertCircle, color: 'text-rose-600', bg: 'bg-rose-50' },
   ];
 
   return (
@@ -447,9 +468,9 @@ export default function TherapistHomePage() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-        
-              <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
-  
+
+            <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
+
             <h1 className="text-xl font-bold tracking-tight ml-5">EZTherapy</h1>
           </div>
 
@@ -469,8 +490,8 @@ export default function TherapistHomePage() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                  activeTab === item.id 
-                    ? "bg-primary text-white shadow-md shadow-primary/10" 
+                  activeTab === item.id
+                    ? "bg-primary text-white shadow-md shadow-primary/10"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
@@ -482,7 +503,7 @@ export default function TherapistHomePage() {
         </div>
 
         <div className="mt-auto p-6 border-t border-slate-100">
-          <button 
+          <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
           >
@@ -498,16 +519,16 @@ export default function TherapistHomePage() {
         <header className="h-20 bg-indigo-600 border-b border-slate-200 px-8 flex items-center justify-between">
           <div className="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 w-96">
             <Search size={18} className="text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search patients, appointments..." 
+            <input
+              type="text"
+              placeholder="Search patients, appointments..."
               className="bg-transparent border-none outline-none text-sm w-full"
             />
           </div>
 
           <div className="flex items-center gap-6">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                 className={cn(
                   "relative p-2 rounded-xl transition-all duration-300",
@@ -542,7 +563,7 @@ export default function TherapistHomePage() {
                       </div>
                       <div className="max-h-96 overflow-y-auto">
                         {MOCK_NOTIFICATIONS.map((notif) => (
-                          <div 
+                          <div
                             key={notif.id}
                             className={cn(
                               "p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0",
@@ -553,10 +574,10 @@ export default function TherapistHomePage() {
                               <div className={cn(
                                 "size-10 rounded-xl flex items-center justify-center shrink-0",
                                 notif.type === 'message' ? "bg-emerald-50 text-emerald-600" :
-                                notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
+                                  notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
                               )}>
                                 {notif.type === 'message' ? <MessageSquare size={18} /> :
-                                 notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
+                                  notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-slate-900 truncate">{notif.title}</p>
@@ -570,7 +591,7 @@ export default function TherapistHomePage() {
                           </div>
                         ))}
                       </div>
-                      <button 
+                      <button
                         className="w-full p-4 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors border-t border-slate-50"
                         onClick={() => setIsNotificationsOpen(false)}
                       >
@@ -587,9 +608,9 @@ export default function TherapistHomePage() {
                 <p className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors uppercase">{userProfile.name}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover:text-slate-300 transition-colors">{userProfile.role}</p>
               </div>
-              <img 
-                src={userProfile.avatar} 
-                alt="Profile" 
+              <img
+                src={userProfile.avatar}
+                alt="Profile"
                 className="size-10 rounded-xl object-cover border-2 border-white shadow-sm ring-0 group-hover:ring-2 group-hover:ring-white transition-all"
                 referrerPolicy="no-referrer"
               />
@@ -605,15 +626,15 @@ export default function TherapistHomePage() {
               <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, {localStorage.getItem("username") || "Doctor"}</h2>
               <p className="text-slate-500 mt-1">You have 8 appointments scheduled for today.</p>
             </div>
-             <div className="flex gap-3">
-              <button 
+            <div className="flex gap-3">
+              <button
                 onClick={() => handleOpenExportModal()}
                 className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2"
               >
                 <Download size={18} />
                 Export Report
               </button>
-              <button 
+              <button
                 onClick={() => setIsBookingModalOpen(true)}
                 className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
               >
@@ -625,14 +646,14 @@ export default function TherapistHomePage() {
           <AnimatePresence>
             {isBookingModalOpen && (
               <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsBookingModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -659,9 +680,9 @@ export default function TherapistHomePage() {
                               selectedPatient.id === patient.id ? "border-primary bg-primary/5" : "border-slate-100 bg-white"
                             )}
                           >
-                            <img 
-                              src={patient.avatar} 
-                              alt={patient.name} 
+                            <img
+                              src={patient.avatar}
+                              alt={patient.name}
                               className="size-12 rounded-xl object-cover"
                               referrerPolicy="no-referrer"
                             />
@@ -687,7 +708,7 @@ export default function TherapistHomePage() {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">Session Time</p>
-                        <select 
+                        <select
                           value={bookingTime}
                           onChange={(e) => setBookingTime(e.target.value)}
                           className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/20"
@@ -699,7 +720,7 @@ export default function TherapistHomePage() {
                       </div>
                     </div>
 
-                    <button 
+                    <button
                       onClick={handleBook}
                       className="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
                     >
@@ -712,14 +733,14 @@ export default function TherapistHomePage() {
 
             {isProfileModalOpen && (
               <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsProfileModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -735,9 +756,9 @@ export default function TherapistHomePage() {
                   {profileAction === 'view' ? (
                     <div className="space-y-6">
                       <div className="flex flex-col items-center text-center">
-                        <img 
-                          src={userProfile.avatar} 
-                          alt={userProfile.name} 
+                        <img
+                          src={userProfile.avatar}
+                          alt={userProfile.name}
                           className="size-24 rounded-3xl object-cover border-4 border-slate-50 shadow-lg mb-4"
                         />
                         <h4 className="text-xl font-bold text-slate-900">{userProfile.name}</h4>
@@ -763,13 +784,13 @@ export default function TherapistHomePage() {
                       </div>
 
                       <div className="flex gap-4">
-                        <button 
+                        <button
                           onClick={() => setProfileAction('edit')}
                           className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
                         >
                           Update Profile
                         </button>
-                        <button 
+                        <button
                           onClick={() => setIsProfileModalOpen(false)}
                           className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                         >
@@ -781,45 +802,45 @@ export default function TherapistHomePage() {
                     <form className="space-y-4">
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Full Name</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           defaultValue={userProfile.name}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Email Address</label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           defaultValue={userProfile.email}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Phone Number</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           defaultValue={userProfile.phone}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Work Bio</label>
-                        <textarea 
+                        <textarea
                           rows="3"
                           defaultValue={userProfile.bio}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"
                         />
                       </div>
                       <div className="flex gap-4 mt-8">
-                        <button 
+                        <button
                           type="button"
                           onClick={() => setProfileAction('view')}
                           className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                         >
                           Cancel
                         </button>
-                        <button 
+                        <button
                           type="button"
                           onClick={() => {
                             setProfileAction('view');
@@ -837,14 +858,14 @@ export default function TherapistHomePage() {
 
             {isLogoutModalOpen && (
               <div className="fixed inset-0 z-[140] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsLogoutModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -855,15 +876,15 @@ export default function TherapistHomePage() {
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
                   <p className="text-slate-500 font-medium mb-8">Are you sure you want to <span className="text-rose-600 font-black">Logout</span>?</p>
-                  
+
                   <div className="flex gap-4">
-                    <button 
+                    <button
                       onClick={() => setIsLogoutModalOpen(false)}
                       className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                     >
                       Cancel
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         localStorage.removeItem("username");
                         localStorage.removeItem("role");
@@ -881,14 +902,14 @@ export default function TherapistHomePage() {
 
             {isExportModalOpen && (
               <div className="fixed inset-0 z-[150] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsExportModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -907,7 +928,7 @@ export default function TherapistHomePage() {
                   <div className="flex gap-4 mb-6">
                     <div className="flex-1">
                       <label className="text-[10px] font-bold text-slate-400 uppercase ml-1 mb-2 block">Select Patient</label>
-                      <select 
+                      <select
                         value={selectedPatientForExport}
                         onChange={(e) => handleOpenExportModal(e.target.value)}
                         className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none appearance-none"
@@ -960,8 +981,8 @@ export default function TherapistHomePage() {
                     <button onClick={() => setIsExportModalOpen(false)} className="px-6 py-3 rounded-xl text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors">
                       Cancel
                     </button>
-                    <button 
-                      onClick={downloadExcel} 
+                    <button
+                      onClick={downloadExcel}
                       disabled={aq10Data.length === 0}
                       className="px-6 py-3 bg-emerald-600 text-white rounded-xl text-sm font-bold shadow-lg shadow-emerald-200 hover:bg-emerald-700 transition-colors flex items-center gap-2 disabled:opacity-50 disabled:shadow-none disabled:cursor-not-allowed"
                     >
@@ -996,7 +1017,7 @@ export default function TherapistHomePage() {
                   <h3 className="text-lg font-bold">Appointment Calendar</h3>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
                         className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 transition-colors"
                       >
@@ -1005,7 +1026,7 @@ export default function TherapistHomePage() {
                       <span className="text-sm font-bold min-w-30 text-center">
                         {format(currentMonth, 'MMMM yyyy')}
                       </span>
-                      <button 
+                      <button
                         onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
                         className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 transition-colors"
                       >
@@ -1051,8 +1072,8 @@ export default function TherapistHomePage() {
                           </span>
                           <div className="space-y-1">
                             {dayApps.slice(0, 2).map((app) => (
-                              <div 
-                                key={app.id} 
+                              <div
+                                key={app.id}
                                 className={cn(
                                   "text-[9px] font-bold px-1.5 py-0.5 rounded truncate",
                                   app.status === 'confirmed' ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"
@@ -1095,9 +1116,9 @@ export default function TherapistHomePage() {
                         </div>
                         <div className="h-10 w-px bg-slate-100" />
                         <div className="flex-1 flex items-center gap-4">
-                          <img 
-                            src={`https://picsum.photos/seed/${app.patientId}/200`} 
-                            alt={app.patientName} 
+                          <img
+                            src={`https://picsum.photos/seed/${app.patientId}/200`}
+                            alt={app.patientName}
                             className="size-10 rounded-xl object-cover"
                             referrerPolicy="no-referrer"
                           />
@@ -1141,9 +1162,9 @@ export default function TherapistHomePage() {
                 <div className="space-y-4">
                   {MOCK_PATIENTS.map((patient) => (
                     <div key={patient.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-all cursor-pointer">
-                      <img 
-                        src={patient.avatar} 
-                        alt={patient.name} 
+                      <img
+                        src={patient.avatar}
+                        alt={patient.name}
                         className="size-12 rounded-xl object-cover"
                         referrerPolicy="no-referrer"
                       />
@@ -1153,8 +1174,8 @@ export default function TherapistHomePage() {
                       </div>
                       <div className={cn(
                         "size-2 rounded-full",
-                        patient.status === 'Needs Attention' ? "bg-rose-500" : 
-                        patient.status === 'Warning: Declining Trend' ? "bg-amber-500" : "bg-emerald-500"
+                        patient.status === 'Needs Attention' ? "bg-rose-500" :
+                          patient.status === 'Warning: Declining Trend' ? "bg-amber-500" : "bg-emerald-500"
                       )} />
                     </div>
                   ))}

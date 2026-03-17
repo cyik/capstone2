@@ -75,3 +75,36 @@ class AQ10Record(AQ10RecordBase):
 
     class Config:
         from_attributes = True
+
+class ClinicalRecordBase(BaseModel):
+    patient_username: str
+    therapist_username: str
+    date: str
+    time: str
+    data: str
+
+class ClinicalRecordCreate(ClinicalRecordBase):
+    pass
+
+class ClinicalRecord(ClinicalRecordBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+class PatientBase(BaseModel):
+    name: str
+    age: int
+    severity: str
+    status: str
+    avatar: str
+    lastActive: str
+
+class PatientCreate(PatientBase):
+    pass
+
+class Patient(PatientBase):
+    id: int
+
+    class Config:
+        from_attributes = True

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Send, User, MessageSquare } from 'lucide-react';
+import { ArrowLeft, Send, User, MessageSquare, Search, Bell, Calendar as CalendarIcon, AlertCircle, LayoutDashboard, LogOut, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
+import { cn } from '../lib/utils';
 import eztherapylogo from '../assets/eztherapy transparent.png';
 
 export default function Messages() {
@@ -14,6 +16,47 @@ export default function Messages() {
   const currentRole = localStorage.getItem("role");
   
   const messagesEndRef = useRef(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [profileAction, setProfileAction] = useState('view');
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
+
+  const [userProfile, setUserProfile] = useState({
+    name: localStorage.getItem("username") || 'Therapist',
+    role: 'Senior Therapist',
+    email: `${localStorage.getItem("username") || 'therapist'}@eztherapy.com`,
+    phone: '+1 987 654 321',
+    address: '456 Wellness Blvd, Health District',
+    bio: 'Dedicated clinical psychologist with 15+ years of experience specializing in pediatric care and autism spectrum support.',
+    avatar: 'https://picsum.photos/seed/therapist/200'
+  });
+
+  const MOCK_NOTIFICATIONS = [
+    {
+      id: 1,
+      title: 'Patient Message',
+      description: 'John Pork sent a new message regarding today\'s session',
+      time: '2m ago',
+      unread: true,
+      type: 'message'
+    },
+    {
+      id: 2,
+      title: 'New Assessment',
+      description: 'Alex Johnson has completed their weekly assessment',
+      time: '12m ago',
+      unread: true,
+      type: 'report'
+    },
+    {
+      id: 3,
+      title: 'Meeting Alert',
+      description: 'Case review starting in 15 minutes with clinical staff',
+      time: '45m ago',
+      unread: false,
+      type: 'appointment'
+    }
+  ];
 
   // Auto-scroll to bottom of messages
   const scrollToBottom = () => {
@@ -106,20 +149,117 @@ export default function Messages() {
   };
 
   return (
-    <div className="flex h-screen bg-slate-50 font-sans">
-      {/* Sidebar: Contacts */}
-      <aside className="w-1/3 max-w-sm bg-white/80 backdrop-blur-xl border-r border-slate-200/60 flex flex-col shadow-xl">
-        <div className="p-6 border-b border-slate-200/60 flex items-center gap-4 bg-gradient-to-r from-indigo-50/50 to-purple-50/50">
-          <button onClick={handleBack} className="p-2 hover:bg-slate-200/50 rounded-full text-slate-500 transition-colors">
-            <ArrowLeft size={20} />
-          </button>
-          <div className="flex items-center gap-2">
-            <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-[1.5] mr-6 drop-shadow-sm" />
-            <h2 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-fuchsia-600 bg-clip-text text-transparent">Messages</h2>
+    <div className="flex flex-col h-screen bg-[#F8FAFC] text-slate-900 font-sans overflow-hidden">
+      {/* Top Header */}
+      <header className="h-20 bg-indigo-600 border-b border-slate-200 px-8 flex items-center justify-between shrink-0 z-50">
+        <div className="flex items-center gap-8">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={handleBack}>
+            <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
+            <h1 className="text-xl font-bold tracking-tight ml-5 text-white">EZTherapy</h1>
+          </div>
+          <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 w-96 ml-8">
+            <Search size={18} className="text-white/70" />
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-white/50"
+            />
           </div>
         </div>
-        
-        <div className="flex-1 overflow-y-auto p-4 space-y-2">
+
+        <div className="flex items-center gap-6">
+          <div className="relative">
+            <button
+              onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
+              className={cn(
+                "relative p-2 rounded-xl transition-all duration-300",
+                isNotificationsOpen ? "bg-white/20 text-white" : "text-white/70 hover:text-white"
+              )}
+            >
+              <Bell size={22} />
+              <span className="absolute top-2 right-2 size-2 bg-rose-500 rounded-full border-2 border-indigo-600" />
+            </button>
+
+            <AnimatePresence>
+              {isNotificationsOpen && (
+                <>
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={() => setIsNotificationsOpen(false)}
+                    className="fixed inset-0 z-40"
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.95, y: 10 }}
+                    className="absolute right-0 mt-3 w-80 bg-white rounded-3xl shadow-2xl border border-slate-100 overflow-hidden z-50 origin-top-right"
+                  >
+                    <div className="p-5 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
+                      <h3 className="font-bold text-slate-900">Notifications</h3>
+                      <span className="px-2 py-0.5 bg-indigo-50 text-indigo-600 text-[10px] font-black uppercase rounded-full tracking-wider">
+                        {MOCK_NOTIFICATIONS.filter(n => n.unread).length} New
+                      </span>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {MOCK_NOTIFICATIONS.map((notif) => (
+                        <div
+                          key={notif.id}
+                          className={cn(
+                            "p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0",
+                            notif.unread && "bg-indigo-50/20"
+                          )}
+                        >
+                          <div className="flex gap-3">
+                            <div className={cn(
+                              "size-10 rounded-xl flex items-center justify-center shrink-0",
+                              notif.type === 'message' ? "bg-emerald-50 text-emerald-600" :
+                                notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
+                            )}>
+                              {notif.type === 'message' ? <MessageSquare size={18} /> :
+                                notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-bold text-slate-900 truncate">{notif.title}</p>
+                              <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">{notif.description}</p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+          <div className="h-8 w-px bg-white/20" />
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => { setProfileAction('view'); setIsProfileModalOpen(true); }}>
+            <div className="text-right">
+              <p className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors uppercase">{userProfile.name}</p>
+              <p className="text-[10px] text-indigo-200 font-bold uppercase tracking-wider">{userProfile.role}</p>
+            </div>
+            <img
+              src={userProfile.avatar}
+              alt="Profile"
+              className="size-10 rounded-xl object-cover border-2 border-white shadow-sm transition-all group-hover:ring-2 group-hover:ring-white"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+        </div>
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        {/* Sidebar: Contacts */}
+        <aside className="w-1/3 max-w-sm bg-white border-r border-slate-200 flex flex-col shadow-sm shrink-0">
+          <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <h2 className="text-lg font-bold text-slate-900">Conversations</h2>
+            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-lg">
+              <MessageSquare size={18} />
+            </div>
+          </div>
+          
+          <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
           {contacts.length === 0 ? (
             <p className="text-center text-slate-400 text-sm mt-4">No contacts found.</p>
           ) : (
@@ -259,6 +399,66 @@ export default function Messages() {
           </div>
         )}
       </main>
+    </div>
+
+      {/* Modals and Overlays */}
+      <AnimatePresence>
+        {isProfileModalOpen && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsProfileModalOpen(false)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-md bg-white rounded-4xl overflow-hidden shadow-2xl p-8">
+              <div className="flex justify-between items-center mb-8">
+                <h3 className="text-2xl font-bold text-slate-900">{profileAction === 'view' ? 'Staff Profile' : 'Edit Staff Details'}</h3>
+                <button onClick={() => setIsProfileModalOpen(false)} className="p-2 hover:bg-slate-100 rounded-full transition-colors"><X size={20} className="text-slate-400" /></button>
+              </div>
+              {profileAction === 'view' ? (
+                <div className="space-y-6 text-center">
+                    <img src={userProfile.avatar} alt={userProfile.name} className="size-24 rounded-3xl object-cover border-4 border-slate-50 shadow-lg mb-4 mx-auto" />
+                    <h4 className="text-xl font-bold text-slate-900">{userProfile.name}</h4>
+                    <p className="text-sm font-bold text-indigo-600 uppercase tracking-widest">{userProfile.role}</p>
+                    <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100 space-y-4 text-left">
+                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Work Contact</p>
+                       <p className="text-sm font-semibold text-slate-700">{userProfile.email}</p>
+                       <p className="text-sm font-semibold text-slate-700">{userProfile.phone}</p>
+                    </div>
+                    <div className="flex gap-4">
+                       <button onClick={() => setProfileAction('edit')} className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold">Update</button>
+                       <button onClick={() => setIsProfileModalOpen(false)} className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold">Close</button>
+                    </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                    <input className="w-full p-4 bg-slate-50 border rounded-2xl" placeholder="Name" defaultValue={userProfile.name} />
+                    <input className="w-full p-4 bg-slate-50 border rounded-2xl" placeholder="Email" defaultValue={userProfile.email} />
+                    <button onClick={() => { setProfileAction('view'); setIsProfileModalOpen(false); }} className="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg">Save Changes</button>
+                </div>
+              )}
+            </motion.div>
+          </div>
+        )}
+
+        {isLogoutModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsLogoutModalOpen(false)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8 text-center">
+              <div className="size-20 bg-rose-50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-rose-500"><LogOut size={40} /></div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
+              <p className="text-slate-500 font-medium mb-8">Are you sure you want to log out?</p>
+              <div className="flex gap-4">
+                <button onClick={() => setIsLogoutModalOpen(false)} className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all">Cancel</button>
+                <button onClick={() => { localStorage.clear(); navigate('/login'); }} className="flex-1 py-4 bg-rose-600 text-white rounded-2xl font-bold flex items-center justify-center gap-2">Logout</button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+      `}</style>
     </div>
   );
 }

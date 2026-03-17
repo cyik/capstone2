@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { 
-  Calendar as CalendarIcon, 
-  Users, 
-  MessageSquare, 
-  LayoutDashboard, 
-  Settings, 
-  LogOut, 
-  Search, 
-  Bell, 
-  ChevronLeft, 
+import {
+  Calendar as CalendarIcon,
+  Users,
+  MessageSquare,
+  LayoutDashboard,
+  Settings,
+  LogOut,
+  Search,
+  Bell,
+  ChevronLeft,
   ChevronRight,
   Video,
   Clock,
@@ -42,44 +42,6 @@ const INITIAL_APPOINTMENTS = [
     videoLink: 'https://meet.google.com/abc-defg-hij'
   },
   {
-    id: '2',
-    patientId: 'p2',
-    patientName: 'Mia Jones',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: new Date().toISOString().split('T')[0],
-    startTime: '13:00',
-    endTime: '14:00',
-    status: 'confirmed',
-    type: 'in-person'
-  },
-  {
-    id: '3',
-    patientId: 'p3',
-    patientName: 'Noah Williams',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 1).toISOString().split('T')[0],
-    startTime: '09:00',
-    endTime: '10:00',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/noah-session'
-  },
-  {
-    id: '4',
-    patientId: 'p3',
-    patientName: 'Emma Williams',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 1).toISOString().split('T')[0],
-    startTime: '13:00',
-    endTime: '14:00',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/noah-session'
-  },
-  {
     id: '5',
     patientId: 'p1',
     patientName: 'Alex Johnson',
@@ -91,31 +53,6 @@ const INITIAL_APPOINTMENTS = [
     status: 'confirmed',
     type: 'video',
     videoLink: 'https://meet.google.com/session-5'
-  },
-  {
-    id: '6',
-    patientId: 'p2',
-    patientName: 'Mia Jones',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 2).toISOString().split('T')[0],
-    startTime: '14:00',
-    endTime: '15:00',
-    status: 'pending',
-    type: 'in-person'
-  },
-  {
-    id: '7',
-    patientId: 'p4',
-    patientName: 'Emma Davis',
-    therapistId: 't2',
-    therapistName: 'Dr. Michael Chang',
-    date: addDays(new Date(), 3).toISOString().split('T')[0],
-    startTime: '11:30',
-    endTime: '12:30',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-7'
   },
   {
     id: '8',
@@ -131,44 +68,6 @@ const INITIAL_APPOINTMENTS = [
     videoLink: 'https://meet.google.com/session-8'
   },
   {
-    id: '9',
-    patientId: 'p3',
-    patientName: 'Noah Williams',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 4).toISOString().split('T')[0],
-    startTime: '09:00',
-    endTime: '10:00',
-    status: 'confirmed',
-    type: 'in-person'
-  },
-  {
-    id: '10',
-    patientId: 'p2',
-    patientName: 'Mia Jones',
-    therapistId: 't2',
-    therapistName: 'Dr. Michael Chang',
-    date: addDays(new Date(), 4).toISOString().split('T')[0],
-    startTime: '13:00',
-    endTime: '14:00',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-10'
-  },
-  {
-    id: '11',
-    patientId: 'p4',
-    patientName: 'Emma Davis',
-    therapistId: 't4',
-    therapistName: 'Dr. Robert Davis',
-    date: addDays(new Date(), 5).toISOString().split('T')[0],
-    startTime: '10:00',
-    endTime: '11:00',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-11'
-  },
-  {
     id: '12',
     patientId: 'p1',
     patientName: 'Alex Johnson',
@@ -182,44 +81,6 @@ const INITIAL_APPOINTMENTS = [
     videoLink: 'https://meet.google.com/session-12'
   },
   {
-    id: '13',
-    patientId: 'p3',
-    patientName: 'Noah Williams',
-    therapistId: 't5',
-    therapistName: 'Dr. Lisa Patel',
-    date: addDays(new Date(), 6).toISOString().split('T')[0],
-    startTime: '11:00',
-    endTime: '12:00',
-    status: 'confirmed',
-    type: 'in-person'
-  },
-  {
-    id: '14',
-    patientId: 'p2',
-    patientName: 'Mia Jones',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 6).toISOString().split('T')[0],
-    startTime: '14:30',
-    endTime: '15:30',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-14'
-  },
-  {
-    id: '15',
-    patientId: 'p4',
-    patientName: 'Emma Davis',
-    therapistId: 't2',
-    therapistName: 'Dr. Michael Chang',
-    date: addDays(new Date(), 7).toISOString().split('T')[0],
-    startTime: '09:30',
-    endTime: '10:30',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-15'
-  },
-  {
     id: '16',
     patientId: 'p1',
     patientName: 'Alex Johnson',
@@ -230,53 +91,10 @@ const INITIAL_APPOINTMENTS = [
     endTime: '14:00',
     status: 'confirmed',
     type: 'in-person'
-  },
-  {
-    id: '17',
-    patientId: 'p2',
-    patientName: 'Mia Jones',
-    therapistId: 't4',
-    therapistName: 'Dr. Robert Davis',
-    date: addDays(new Date(), 8).toISOString().split('T')[0],
-    startTime: '10:30',
-    endTime: '11:30',
-    status: 'confirmed',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-17'
-  },
-  {
-    id: '18',
-    patientId: 'p3',
-    patientName: 'Noah Williams',
-    therapistId: 't1',
-    therapistName: 'Dr. Sarah Chen',
-    date: addDays(new Date(), 8).toISOString().split('T')[0],
-    startTime: '15:00',
-    endTime: '16:00',
-    status: 'pending',
-    type: 'video',
-    videoLink: 'https://meet.google.com/session-18'
-  },
-  {
-    id: '19',
-    patientId: 'p4',
-    patientName: 'Emma Davis',
-    therapistId: 't5',
-    therapistName: 'Dr. Lisa Patel',
-    date: addDays(new Date(), 9).toISOString().split('T')[0],
-    startTime: '12:00',
-    endTime: '13:00',
-    status: 'confirmed',
-    type: 'in-person'
   }
 ];
 
-const MOCK_PATIENTS = [
-  { id: 'p1', name: 'Alex Johnson', age: 8, status: 'Stable & Calm', lastActive: '2h ago', avatar: 'https://picsum.photos/seed/p1/200' },
-  { id: 'p2', name: 'Mia Jones', age: 6, status: 'Needs Attention', lastActive: '5m ago', avatar: 'https://picsum.photos/seed/p2/200' },
-  { id: 'p3', name: 'Noah Williams', age: 10, status: 'Stable & Calm', lastActive: '1d ago', avatar: 'https://picsum.photos/seed/p3/200' },
-  { id: 'p4', name: 'Emma Davis', age: 7, status: 'Warning: Declining Trend', lastActive: '1h ago', avatar: 'https://picsum.photos/seed/p4/200' },
-];
+
 
 const RECENT_APPOINTMENTS = [
   { id: 'a1', therapistName: 'Dr. Sarah Chen', avatar: 'https://picsum.photos/seed/sarah/200', timeAgo: '2 days ago', level: 'Senior Therapist', age: 42, education: 'Ph.D. in Clinical Psychology', department: 'Pediatric Psychology', experience: '15 Years' },
@@ -328,7 +146,7 @@ export default function PatientHomePage() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [bookingTime, setBookingTime] = useState('10:00');
-  const [selectedPatient, setSelectedPatient] = useState(MOCK_PATIENTS[0]);
+
   const [isViewAllModalOpen, setIsViewAllModalOpen] = useState(false);
   const [selectedTherapistProfile, setSelectedTherapistProfile] = useState(null);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -362,8 +180,8 @@ export default function PatientHomePage() {
   const handleBook = () => {
     const newApp = {
       id: Math.random().toString(36).substr(2, 9),
-      patientId: selectedPatient.id,
-      patientName: selectedPatient.name,
+      patientId: 'p1',
+      patientName: userProfile.name,
       therapistId: 't1',
       therapistName: 'Dr. Sarah Chen',
       date: format(selectedDate, 'yyyy-MM-dd'),
@@ -417,9 +235,9 @@ export default function PatientHomePage() {
       <aside className="w-64 bg-white border-r border-slate-200 flex flex-col">
         <div className="p-6">
           <div className="flex items-center gap-3 mb-8">
-        
-              <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
-  
+
+            <img src={eztherapylogo} alt="Logo" className="h-10 w-10 object-contain scale-200 ml-7" />
+
             <h1 className="text-xl font-bold tracking-tight ml-5">EZTherapy</h1>
           </div>
 
@@ -427,9 +245,9 @@ export default function PatientHomePage() {
             {[
               { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
               { id: 'AI chatboard', label: 'AI chatboard', icon: MessageSquare, to: '/patient-chat' },
-              { id: 'schedule', label: 'Schedule', icon: CalendarIcon, to: '/calendar' },
+              { id: 'schedule', label: 'Schedule', icon: CalendarIcon, to: '/patient-calendar' },
               { id: 'messages', label: 'Messages', icon: MessageSquare, to: '/messages' },
-              
+
             ].map((item) => (
               <button
                 key={item.id}
@@ -439,8 +257,8 @@ export default function PatientHomePage() {
                 }}
                 className={cn(
                   "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                  activeTab === item.id 
-                    ? "bg-primary text-white shadow-md shadow-primary/10" 
+                  activeTab === item.id
+                    ? "bg-primary text-white shadow-md shadow-primary/10"
                     : "text-slate-500 hover:bg-slate-50 hover:text-slate-900"
                 )}
               >
@@ -452,7 +270,7 @@ export default function PatientHomePage() {
         </div>
 
         <div className="mt-auto p-6 border-t border-slate-100">
-          <button 
+          <button
             onClick={() => setIsLogoutModalOpen(true)}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition-all"
           >
@@ -466,18 +284,18 @@ export default function PatientHomePage() {
       <main className="flex-1 flex flex-col overflow-hidden">
         {/* Top Header */}
         <header className="h-20 bg-indigo-600 border-b border-slate-200 px-8 flex items-center justify-between">
-          <div className="flex items-center gap-4 bg-slate-50 px-4 py-2 rounded-xl border border-slate-200 w-96">
-            <Search size={18} className="text-slate-400" />
-            <input 
-              type="text" 
-              placeholder="Search patients, appointments..." 
-              className="bg-transparent border-none outline-none text-sm w-full"
+          <div className="flex items-center gap-4 bg-white/10 backdrop-blur-md px-4 py-2 rounded-xl border border-white/20 w-96 ml-8">
+            <Search size={18} className="text-white/70" />
+            <input
+              type="text"
+              placeholder="Search your sessions..."
+              className="bg-transparent border-none outline-none text-sm w-full text-white placeholder:text-white/50"
             />
           </div>
 
           <div className="flex items-center gap-6">
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
                 className={cn(
                   "relative p-2 rounded-xl transition-all duration-300",
@@ -512,7 +330,7 @@ export default function PatientHomePage() {
                       </div>
                       <div className="max-h-96 overflow-y-auto">
                         {MOCK_NOTIFICATIONS.map((notif) => (
-                          <div 
+                          <div
                             key={notif.id}
                             className={cn(
                               "p-4 hover:bg-slate-50 transition-colors cursor-pointer border-b border-slate-50 last:border-0",
@@ -523,10 +341,10 @@ export default function PatientHomePage() {
                               <div className={cn(
                                 "size-10 rounded-xl flex items-center justify-center shrink-0",
                                 notif.type === 'message' ? "bg-emerald-50 text-emerald-600" :
-                                notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
+                                  notif.type === 'appointment' ? "bg-indigo-50 text-indigo-600" : "bg-amber-50 text-amber-600"
                               )}>
                                 {notif.type === 'message' ? <MessageSquare size={18} /> :
-                                 notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
+                                  notif.type === 'appointment' ? <CalendarIcon size={18} /> : <AlertCircle size={18} />}
                               </div>
                               <div className="flex-1 min-w-0">
                                 <p className="text-sm font-bold text-slate-900 truncate">{notif.title}</p>
@@ -540,7 +358,7 @@ export default function PatientHomePage() {
                           </div>
                         ))}
                       </div>
-                      <button 
+                      <button
                         className="w-full p-4 text-xs font-bold text-indigo-600 hover:bg-indigo-50 transition-colors border-t border-slate-50"
                         onClick={() => setIsNotificationsOpen(false)}
                       >
@@ -557,9 +375,9 @@ export default function PatientHomePage() {
                 <p className="text-sm font-bold text-white group-hover:text-indigo-200 transition-colors uppercase">{userProfile.name}</p>
                 <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider group-hover:text-slate-300 transition-colors">{userProfile.role}</p>
               </div>
-              <img 
-                src={userProfile.avatar} 
-                alt="Profile" 
+              <img
+                src={userProfile.avatar}
+                alt="Profile"
                 className="size-10 rounded-xl object-cover border-2 border-white shadow-sm ring-0 group-hover:ring-2 group-hover:ring-white transition-all"
                 referrerPolicy="no-referrer"
               />
@@ -572,24 +390,24 @@ export default function PatientHomePage() {
           {/* Welcome Section */}
           <div className="flex items-end justify-between">
             <div>
-              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, {localStorage.getItem("username") || "Guest"}</h2>
-              <p className="text-slate-500 mt-1">You have 8 appointments scheduled for today.</p>
+              <h2 className="text-3xl font-bold tracking-tight text-slate-900">Welcome back, {userProfile.name}</h2>
+              <p className="text-slate-500 mt-1">You have {appointments.length} total sessions tracked.</p>
             </div>
             <div className="flex gap-3">
-              <button 
+              <button
                 onClick={() => navigate('/aq10-form')}
                 className="px-4 py-2 bg-indigo-50 border border-indigo-200 rounded-xl text-sm font-bold text-indigo-600 hover:bg-indigo-100 transition-all flex items-center gap-2"
               >
                 <BrainCircuit size={18} />
                 Daily AQ-10 Quiz
               </button>
-              <button 
+              <button
                 onClick={handleOpenExportModal}
                 className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all flex items-center gap-2">
                 <Download size={18} />
                 Export Report
               </button>
-              <button 
+              <button
                 onClick={() => setIsBookingModalOpen(true)}
                 className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
               >
@@ -601,14 +419,14 @@ export default function PatientHomePage() {
           <AnimatePresence>
             {isBookingModalOpen && (
               <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsBookingModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -622,33 +440,12 @@ export default function PatientHomePage() {
                   </div>
 
                   <div className="space-y-8">
-                    {/* Patient Selection */}
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">Select Patient</p>
-                      <div className="grid grid-cols-4 gap-4">
-                        {MOCK_PATIENTS.map(patient => (
-                          <button
-                            key={patient.id}
-                            onClick={() => setSelectedPatient(patient)}
-                            className={cn(
-                              "flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all",
-                              selectedPatient.id === patient.id ? "border-primary bg-primary/5" : "border-slate-100 bg-white"
-                            )}
-                          >
-                            <img 
-                              src={patient.avatar} 
-                              alt={patient.name} 
-                              className="size-12 rounded-xl object-cover"
-                              referrerPolicy="no-referrer"
-                            />
-                            <span className={cn(
-                              "text-[10px] font-bold text-center truncate w-full",
-                              selectedPatient.id === patient.id ? "text-primary" : "text-slate-600"
-                            )}>
-                              {patient.name.split(' ')[0]}
-                            </span>
-                          </button>
-                        ))}
+                    {/* Therapist Info */}
+                    <div className="p-4 bg-indigo-50 rounded-2xl border border-indigo-100 flex items-center gap-4">
+                      <img src="https://picsum.photos/seed/sarah/200" alt="Sarah Chen" className="size-12 rounded-xl object-cover" />
+                      <div>
+                        <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest">Primary Therapist</p>
+                        <p className="text-sm font-bold text-slate-900">Dr. Sarah Chen</p>
                       </div>
                     </div>
 
@@ -663,7 +460,7 @@ export default function PatientHomePage() {
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-4 ml-1">Session Time</p>
-                        <select 
+                        <select
                           value={bookingTime}
                           onChange={(e) => setBookingTime(e.target.value)}
                           className="w-full p-4 bg-slate-50 rounded-2xl border border-slate-100 text-sm font-bold outline-none focus:ring-2 focus:ring-primary/20"
@@ -675,7 +472,7 @@ export default function PatientHomePage() {
                       </div>
                     </div>
 
-                    <button 
+                    <button
                       onClick={handleBook}
                       className="w-full py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors mt-4"
                     >
@@ -685,17 +482,17 @@ export default function PatientHomePage() {
                 </motion.div>
               </div>
             )}
-            
+
             {isViewAllModalOpen && (
               <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsViewAllModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -710,9 +507,9 @@ export default function PatientHomePage() {
                   <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
                     {RECENT_APPOINTMENTS.map((apt) => (
                       <div key={apt.id} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-slate-50 border border-slate-100 transition-all cursor-pointer">
-                        <img 
-                          src={apt.avatar} 
-                          alt={apt.therapistName} 
+                        <img
+                          src={apt.avatar}
+                          alt={apt.therapistName}
                           className="size-12 rounded-xl object-cover border-2 border-slate-100"
                           referrerPolicy="no-referrer"
                         />
@@ -734,23 +531,23 @@ export default function PatientHomePage() {
 
             {selectedTherapistProfile && (
               <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setSelectedTherapistProfile(null)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="relative w-full max-w-sm bg-white rounded-4xl overflow-hidden shadow-2xl p-8"
                 >
                   <div className="flex flex-col items-center text-center">
-                    <img 
-                      src={selectedTherapistProfile.avatar} 
-                      alt={selectedTherapistProfile.therapistName} 
+                    <img
+                      src={selectedTherapistProfile.avatar}
+                      alt={selectedTherapistProfile.therapistName}
                       className="size-24 rounded-2xl object-cover border-4 border-slate-100 mb-4 shadow-sm"
                       referrerPolicy="no-referrer"
                     />
@@ -758,14 +555,14 @@ export default function PatientHomePage() {
                     <p className="text-xs font-bold text-indigo-600 uppercase tracking-wider mt-1 mb-4">{selectedTherapistProfile.level}</p>
                     <div className="w-full space-y-3 mt-2 text-left bg-slate-50 p-4 rounded-2xl border border-slate-100">
                       <div className="grid grid-cols-2 gap-3 mb-2">
-                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase">Age</p>
-                            <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.age}</p>
-                         </div>
-                         <div>
-                            <p className="text-[10px] font-bold text-slate-400 uppercase">Experience</p>
-                            <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.experience}</p>
-                         </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Age</p>
+                          <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.age}</p>
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase">Experience</p>
+                          <p className="text-sm font-medium text-slate-700">{selectedTherapistProfile.experience}</p>
+                        </div>
                       </div>
                       <div>
                         <p className="text-[10px] font-bold text-slate-400 uppercase">Education</p>
@@ -794,14 +591,14 @@ export default function PatientHomePage() {
 
             {isExportModalOpen && (
               <div className="fixed inset-0 z-[120] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsExportModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -863,14 +660,14 @@ export default function PatientHomePage() {
 
             {isProfileModalOpen && (
               <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsProfileModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -886,9 +683,9 @@ export default function PatientHomePage() {
                   {profileAction === 'view' ? (
                     <div className="space-y-6">
                       <div className="flex flex-col items-center text-center">
-                        <img 
-                          src={userProfile.avatar} 
-                          alt={userProfile.name} 
+                        <img
+                          src={userProfile.avatar}
+                          alt={userProfile.name}
                           className="size-24 rounded-3xl object-cover border-4 border-slate-50 shadow-lg mb-4"
                         />
                         <h4 className="text-xl font-bold text-slate-900">{userProfile.name}</h4>
@@ -914,13 +711,13 @@ export default function PatientHomePage() {
                       </div>
 
                       <div className="flex gap-4">
-                        <button 
+                        <button
                           onClick={() => setProfileAction('edit')}
                           className="flex-1 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all"
                         >
                           Edit Profile Details
                         </button>
-                        <button 
+                        <button
                           onClick={() => setIsProfileModalOpen(false)}
                           className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                         >
@@ -932,45 +729,45 @@ export default function PatientHomePage() {
                     <form className="space-y-4">
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Full Name</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           defaultValue={userProfile.name}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Email Address</label>
-                        <input 
-                          type="email" 
+                        <input
+                          type="email"
                           defaultValue={userProfile.email}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Phone Number</label>
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           defaultValue={userProfile.phone}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
                         />
                       </div>
                       <div className="space-y-2">
                         <label className="text-[10px] font-bold text-slate-400 uppercase ml-1">Personal Bio</label>
-                        <textarea 
+                        <textarea
                           rows="3"
                           defaultValue={userProfile.bio}
                           className="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-semibold focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none resize-none"
                         />
                       </div>
                       <div className="flex gap-4 mt-8">
-                        <button 
+                        <button
                           type="button"
                           onClick={() => setProfileAction('view')}
                           className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                         >
                           Discard Changes
                         </button>
-                        <button 
+                        <button
                           type="button"
                           onClick={() => {
                             // Update logic would go here
@@ -989,14 +786,14 @@ export default function PatientHomePage() {
 
             {isLogoutModalOpen && (
               <div className="fixed inset-0 z-[140] flex items-center justify-center p-4">
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   onClick={() => setIsLogoutModalOpen(false)}
                   className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                 />
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
@@ -1007,15 +804,15 @@ export default function PatientHomePage() {
                   </div>
                   <h3 className="text-2xl font-bold text-slate-900 mb-2">Logout</h3>
                   <p className="text-slate-500 font-medium mb-8">Are you sure you want to <span className="text-rose-600 font-black">Logout</span>?</p>
-                  
+
                   <div className="flex gap-4">
-                    <button 
+                    <button
                       onClick={() => setIsLogoutModalOpen(false)}
                       className="flex-1 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold hover:bg-slate-200 transition-all"
                     >
                       Cancel
                     </button>
-                    <button 
+                    <button
                       onClick={() => {
                         localStorage.removeItem("username");
                         localStorage.removeItem("role");
@@ -1050,13 +847,13 @@ export default function PatientHomePage() {
             {/* Calendar Section */}
             <div className="col-span-8 space-y-6">
               <AQ10Dashboard username="john_pork" />
-              
+
               <div className="bg-white rounded-4xl border border-slate-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-slate-100 flex items-center justify-between">
                   <h3 className="text-lg font-bold">Appointment Calendar</h3>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <button 
+                      <button
                         onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}
                         className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 transition-colors"
                       >
@@ -1065,7 +862,7 @@ export default function PatientHomePage() {
                       <span className="text-sm font-bold min-w-30 text-center">
                         {format(currentMonth, 'MMMM yyyy')}
                       </span>
-                      <button 
+                      <button
                         onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}
                         className="p-2 hover:bg-slate-50 rounded-lg text-slate-400 transition-colors"
                       >
@@ -1111,14 +908,14 @@ export default function PatientHomePage() {
                           </span>
                           <div className="space-y-1">
                             {dayApps.slice(0, 2).map((app) => (
-                              <div 
-                                key={app.id} 
+                              <div
+                                key={app.id}
                                 className={cn(
                                   "text-[9px] font-bold px-1.5 py-0.5 rounded truncate",
                                   app.status === 'confirmed' ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-600"
                                 )}
                               >
-                                {app.startTime} {app.patientName}
+                                {app.startTime} - {app.therapistName}
                               </div>
                             ))}
                             {dayApps.length > 2 && (
@@ -1155,14 +952,8 @@ export default function PatientHomePage() {
                         </div>
                         <div className="h-10 w-px bg-slate-100" />
                         <div className="flex-1 flex items-center gap-4">
-                          <img 
-                            src={`https://picsum.photos/seed/${app.patientId}/200`} 
-                            alt={app.patientName} 
-                            className="size-10 rounded-xl object-cover"
-                            referrerPolicy="no-referrer"
-                          />
                           <div>
-                            <p className="text-sm font-bold text-slate-900">{app.patientName}</p>
+                            <p className="text-sm font-bold text-slate-900">{app.therapistName}</p>
                             <div className="flex items-center gap-3 mt-0.5">
                               <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold uppercase tracking-wider">
                                 {app.type === 'video' ? <Video size={12} className="text-primary" /> : <MapPin size={12} />}
@@ -1201,9 +992,9 @@ export default function PatientHomePage() {
                 <div className="space-y-4">
                   {RECENT_APPOINTMENTS.slice(0, 4).map((apt) => (
                     <div key={apt.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-slate-50 transition-all cursor-pointer">
-                      <img 
-                        src={apt.avatar} 
-                        alt={apt.therapistName} 
+                      <img
+                        src={apt.avatar}
+                        alt={apt.therapistName}
                         className="size-12 rounded-xl object-cover border-2 border-slate-100"
                         referrerPolicy="no-referrer"
                       />
@@ -1226,9 +1017,9 @@ export default function PatientHomePage() {
                 <h3 className="text-lg font-bold mb-6">Recent Activity</h3>
                 <div className="space-y-6">
                   {[
-                    { type: 'message', text: 'New message from Alex\'s guardian', time: '10m ago' },
-                    { type: 'report', text: 'Daily report submitted for Mia', time: '1h ago' },
-                    { type: 'session', text: 'Session with Noah completed', time: '3h ago' },
+                    { type: 'message', text: 'Dr. Sarah Chen sent a new message', time: '10m ago' },
+                    { type: 'report', text: 'Daily assessment completed', time: '1h ago' },
+                    { type: 'session', text: 'Upcoming session today at 10:00 AM', time: '3h ago' },
                   ].map((activity, i) => (
                     <div key={i} className="flex gap-4">
                       <div className="relative">
