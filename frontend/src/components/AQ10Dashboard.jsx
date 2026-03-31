@@ -71,7 +71,7 @@ export default function AQ10Dashboard({ username = "john_pork" }) {
           <div>
             <h4 className="text-base font-bold text-rose-900">Professional Assistance Recommended</h4>
             <p className="text-sm text-rose-700 font-medium mt-1">
-              Based on the 30-day symptom tracking and LSTM forecast, the predicted AQ-10 score is elevated (&gt;{prediction?.toFixed(1)}). 
+              Based on the 30-day symptom tracking and LSTM forecast, the predicted AQ-10 score is elevated (&gt;{prediction?.toFixed(1)}).
               The system recommends seeking professional medical advice or scheduling a session with a therapist soon.
             </p>
           </div>
@@ -89,7 +89,7 @@ export default function AQ10Dashboard({ username = "john_pork" }) {
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
               <XAxis dataKey="name" axisLine={false} tickLine={false} padding={{ left: 20, right: 20 }} tick={{ fill: '#64748B', fontSize: 12, fontWeight: 600 }} />
               <YAxis domain={[0, 10]} axisLine={false} tickLine={false} tick={{ fill: '#64748B', fontSize: 12, fontWeight: 600 }} />
-              <Tooltip 
+              <Tooltip
                 contentStyle={{ borderRadius: '1rem', border: 'none', boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)' }}
                 labelStyle={{ fontWeight: 'bold', color: '#0F172A', marginBottom: '0.25rem' }}
               />
